@@ -63,45 +63,25 @@ router.post('/api/query', function *() {
 router.post('/api/databases', function *() {
   const { body } = this.request;
   const { url, port } = body;
-  // let db;
-  // let adminDb;
-  // let dbs;
 
-  const newUrl = url.indexOf("mongodb://") !== -1 ? url.slice(10) : url;
+  const newUrl = url.indexOf("mongodb://") === -1 ? `mongodb://${url}` : url;
 
-  const db = yield MongoClient.connectAsync(`${url}:${port}`)
-  const adminDb = db.admin();
-  const dbs = yield adminDb.listDatabasesAsync();
+  try {
+    const db = yield MongoClient.connectAsync(`${newUrl}:${port}`)
+    const adminDb = db.admin();
+    const dbs = yield adminDb.listDatabasesAsync();
 
-  // try {
-  //
-  // } catch (err) {
-  //   this.throw(400, 'Error connecting to database');
-  //
-  // }
-  //
-  // try {
-  // } catch (err) {
-  //   this.throw(400, 'Error listing databases');
-  // }
-
-
-
-
-  for (let database of dbs.databases) {
-    try {
+    for (let database of dbs.databases) {
       database.collections = yield db.db(database.name).listCollections().toArray();
-    } catch (err) {
-      this.throw(400, 'Error listing collections');
     }
+
+    db.closeAsync();
+    this.body = dbs;
+
+  } catch (err) {
+    this.throw(400, 'Error connecting to database');
   }
-
-  db.closeAsync();
-
-
-  this.body = dbs;
-
-})
+});
 
 router.get('/api/files/:url/:port/:database/:filename', function *() {
 
