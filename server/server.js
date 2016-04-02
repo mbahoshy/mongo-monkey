@@ -33,10 +33,4 @@ app.use(staticRoutes())
 app.use(router.allowedMethods());
 app.use(serve(path.join(__dirname, 'public')));
 
-process.argv.forEach(function (val, index, array) {
-  console.log(index + ': ' + val);
-});
-
-const server = app.listen(3000, function() {
-  console.dir('Server listening', { port: server.address().port, interface: server.address().address });
-});
+export default app;
