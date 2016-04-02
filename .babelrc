@@ -1,0 +1,10 @@
+{
+  "presets": ["react", "es2015"],
+  "plugins": [
+    "transform-strict-mode",
+    "transform-async-to-generator",
+    "transform-es2015-modules-commonjs",
+    "transform-react-constant-elements",
+    "babel-plugin-transform-runtime"
+  ]
+}

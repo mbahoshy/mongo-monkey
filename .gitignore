@@ -1,0 +1,8 @@
+/node_modules
+coverage
+lint
+npm-debug.log
+.env
+/server/public
+/server/templates
+/build
