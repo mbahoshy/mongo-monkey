@@ -30,12 +30,23 @@ router.get('/', function *() {
 	yield this.render('index')
 });
 
+function* runQuery(query, db) {
+  try {
+    const result = yield db.evalAsync(query);
+    return { query, result };
+  } catch (err) {
+    return { query, err };
+  }
+}
+
 router.post('/api/query', function *() {
   const { body } = this.request;
 
   const { host, activeDb } = body;
 
-  const connectionString = `${host.url}:${host.port}/${activeDb}`;
+  const newUrl = host.url.indexOf("mongodb://") === -1 ? `mongodb://${host.url}` : host.url;
+
+  const connectionString = `${newUrl}:${host.port}/${activeDb}`;
 
   const queries = body.query.split(';');
 
@@ -46,19 +57,20 @@ router.post('/api/query', function *() {
   for (let query of queries) {
     if (!query || query === '') continue;
     // const formattedQuery = formatQuery(query);
-    try {
-      const result = yield db.evalAsync(query);
-      results.push({ query, result });
-    } catch (err) {
-      results.push({ query, err })
-    }
-
+    results.push(yield runQuery(query, db));
   }
+
+  yield Promise.all(results);
 
   db.closeAsync();
 
   this.body = results;
-})
+});
+
+function* getCollections(database, db) {
+  database.collections = yield db.db(database.name).listCollections().toArray();
+  return database;
+}
 
 router.post('/api/databases', function *() {
   const { body } = this.request;
@@ -71,17 +83,23 @@ router.post('/api/databases', function *() {
     const adminDb = db.admin();
     const dbs = yield adminDb.listDatabasesAsync();
 
+    const databases = [];
     for (let database of dbs.databases) {
-      database.collections = yield db.db(database.name).listCollections().toArray();
+      databases.push(yield getCollections(database, db));
     }
+
+    yield Promise.all(databases);
 
     db.closeAsync();
     this.body = dbs;
 
   } catch (err) {
+    console.dir(err);
     this.throw(400, 'Error connecting to database');
   }
 });
+
+
 
 router.get('/api/files/:url/:port/:database/:filename', function *() {
 
