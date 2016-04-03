@@ -120,6 +120,7 @@ class JsonContainer extends Component {
     const onPageClick = (index) => {
       this.setState({ currentPage: index });
     }
+    const showPagination = Array.isArray(data);
     const pagination = (
       <div className="row">
         <div className="col-lg-12">
@@ -137,9 +138,9 @@ class JsonContainer extends Component {
     )
     return (
       <div>
-        {pagination}
+        {showPagination && pagination}
         <Json data={displayData} padding={10} start={maxRows * currentPage} />
-        {pagination}
+        {showPagination && pagination}
       </div>
     )
   }

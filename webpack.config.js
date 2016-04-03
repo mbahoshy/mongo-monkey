@@ -36,6 +36,9 @@ module.exports = {
     modulesDirectories: ['client', 'client/routes', 'client/less', 'client/components', 'node_modules']
   },
   plugins: [
+    new webpack.EnvironmentPlugin([
+      'ENVIRONMENT',
+    ]),
     new HtmlWebPackPlugin({
       inject: false,
       template: './client/templates/index.ejs',

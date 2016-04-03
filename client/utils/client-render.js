@@ -12,9 +12,14 @@ export default function clientRender(Container, reducers) {
 
   const reducer = combineReducers(reducers);
 
+  const middleware = [thunkMiddleware];
+
+  if (process.env.ENVIRONMENT !== 'production') {
+    middleware.push(createLogger());
+  }
+
 	const createStoreWithMiddleware = applyMiddleware(
-	  thunkMiddleware,
-	  createLogger()
+    ...middleware
 	)(createStore)
 
 
