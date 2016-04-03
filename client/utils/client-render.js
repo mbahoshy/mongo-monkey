@@ -12,8 +12,6 @@ export default function clientRender(Container, reducers) {
 
   const reducer = combineReducers(reducers);
 
-  console.dir(reducers)
-
 	const createStoreWithMiddleware = applyMiddleware(
 	  thunkMiddleware,
 	  createLogger()

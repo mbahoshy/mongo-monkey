@@ -5,6 +5,8 @@ function results (state=[], action) {
   switch (action.type) {
     case "POST_QUERY_SUCCESS":
       return action.payload;
+    case "POST_QUERY_FAIL":
+      return [];
     default:
       return state;
   }

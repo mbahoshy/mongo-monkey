@@ -6,6 +6,7 @@ import ResultsContainer from 'routes/home/results-container';
 import DatabaseContainer from 'routes/home/database-container';
 import ConnectionModal from 'routes/home/connection-modal';
 import MonkeySrc from 'imgs/monkey.png';
+import DancingSrc from 'imgs/dancing_banana.gif';
 
 class Home extends Component {
 	constructor(props) {
@@ -25,6 +26,7 @@ class Home extends Component {
       databases,
       onSetActiveDb,
       onSetConnections,
+      queryLoading,
       connections } = this.props;
 
     const handleOnChange = (e) => {
@@ -102,7 +104,15 @@ class Home extends Component {
             <span className="input-group-addon" id="qyinput" onClick={handleSendQuery}>Send</span>
           </div>
           <br />
-          <ResultsContainer {...{ results, onSetActiveTab, activeTab, onToggleView, view, host, activeDb, value}} />
+          {queryLoading && (
+            <div className="loading-banana">
+              <img src={DancingSrc} />
+              <div>Loading ...</div>
+            </div>
+          )}
+          {!queryLoading && (
+            <ResultsContainer {...{ results, onSetActiveTab, activeTab, onToggleView, view, host, activeDb, value}} />
+          )}
         </div>
 			</div>
 		)
@@ -116,6 +126,7 @@ const mapState = state => ({
   databases: state.appStore.databases,
   activeDb: state.appStore.activeDb,
   connections: state.appStore.connections,
+  queryLoading: state.loadingStore.loading.queryLoading,
 });
 const mapDispatch = dispatch => ({
   onSendQuery: (host, activeDb, query) => dispatch(sendQuery(host, activeDb, query)),

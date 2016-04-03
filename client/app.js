@@ -31,11 +31,13 @@ class App extends React.Component{
       <div>
         <Router routes={routes} />
 
+        {/*
         <footer>
           <div className="container-fluid">
             Footer.
           </div>
         </footer>
+        */}
       </div>
     )
   }
