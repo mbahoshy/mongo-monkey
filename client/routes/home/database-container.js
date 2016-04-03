@@ -28,9 +28,9 @@ class Database extends Component {
     const toggleIsOpen = () => this.setState({ isOpen: !isOpen });
     const className = db.name === activeDb ? "list-group-item active" : "list-group-item"
     return (
-      <div className={className}>
+      <div className={className} onClick={handleSetActive}>
         <div>
-          <div onClick={handleSetActive} style={{ display: 'inline-block' }}>
+          <div style={{ display: 'inline-block' }}>
             <span className="fa fa-database"></span> {db.name}
           </div>
           <div style={{ display: 'inline-block', padding: '5px' }} onClick={toggleIsOpen} className="pull-right">
@@ -39,10 +39,10 @@ class Database extends Component {
           </div>
         </div>
         {isOpen && (
-          <div>
+          <div style={{ marginTop: '5px' }}>
             {db.collections.map((v, index) => {
               return (
-                <div key={index}>{v.name}</div>
+                <div key={index} className="collection"><span className="fa fa-table"></span> {v.name}</div>
               )
             })}
           </div>

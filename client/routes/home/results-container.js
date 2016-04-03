@@ -49,7 +49,9 @@ class ResultsContainer extends Component {
       onToggleView("json");
     }
     const style = {
-      color: 'rgba(128, 128, 128, 0.71)',
+      color: activeResult.err ? 'red' : 'green',
+      opacity: '.75',
+      // color: 'rgba(128, 128, 128, 0.71)',
       fontStyle: 'italic',
       fontFamily: 'monospace',
       float: 'left',
@@ -76,7 +78,7 @@ class ResultsContainer extends Component {
               </div>
             </div>
             {activeResult.err && (
-              <div>{activeResult.err}</div>
+              <Result data={activeResult.err} view={view} {...{host, activeDb, value}} />
             )}
             {!activeResult.err && (
               <Result data={activeResult.result} view={view} {...{host, activeDb, value}} />

@@ -5,6 +5,7 @@ import Json from 'components/json-structure';
 import ResultsContainer from 'routes/home/results-container';
 import DatabaseContainer from 'routes/home/database-container';
 import ConnectionModal from 'routes/home/connection-modal';
+import MonkeySrc from 'imgs/monkey.png';
 
 class Home extends Component {
 	constructor(props) {
@@ -60,15 +61,17 @@ class Home extends Component {
 
     const style = {
       marginTop: '30px',
-      color: 'red',
+      color: 'blue',
     }
-    console.dir(this.props);
 		return (
 			<div className="container-fluid">
         <div className="row">
-          <div className="col-lg-12">
-            <h2 className="pull-left">MongoTest</h2>
-            <span className="pull-right" style={style} onClick={onModalOpen}>Manage Connections</span>
+          <div className="app-header">
+            <div className="col-lg-12">
+              <img className="logo" src={MonkeySrc} />
+              <h2 className="pull-left">MongoMonkey</h2>
+              <span className="pull-right" style={style} onClick={onModalOpen}>Manage Connections</span>
+            </div>
           </div>
         </div>
 
