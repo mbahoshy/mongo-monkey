@@ -109,7 +109,7 @@ class JsonContainer extends Component {
   render () {
     const { data } = this.props;
     const maxRows = 10;
-    const maxPages = 10;
+    const maxPages = 8;
     const { currentPage } = this.state;
     let displayData = data;
     if (data.length > maxRows) {
