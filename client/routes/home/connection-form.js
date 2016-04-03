@@ -14,7 +14,8 @@ class SimpleForm extends Component {
       fields: {name, url, port},
       handleSubmit,
       resetForm,
-      submitting
+      submitting,
+      handleCancelEdit,
       } = this.props;
     return (
       <form onSubmit={handleSubmit}>
@@ -30,10 +31,10 @@ class SimpleForm extends Component {
         </div>
         <div className="col-lg-3">
           <div className="input-group">
-            <input className="form-control" aria-describedby="conninput" type="text" placeholder="Port" {...port}/>
+            <input className="form-control" aria-describedby="conninput" type="text" placeholder="Port" {...port} style={{ borderRadius: '4px' }}/>
             <span className="input-group-addon" id="conninput">
-              <span className="fa fa-check connection-button"></span>
-              <span className="fa fa-remove connection-button"></span>
+              <span className="fa fa-check connection-button" onClick={handleSubmit}></span>
+              <span className="fa fa-ban connection-button" onClick={handleCancelEdit}></span>
             </span>
           </div>
         </div>

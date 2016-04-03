@@ -24,9 +24,7 @@ export const ModalComponent = (props) => {
       <div className="reveal-overlay" onClick={close}></div>
       <div className="reveal">
         {children}
-        <button className="close-button" type="button" onClick={close}>
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <span className="close-button fa fa-remove" onClick={close}></span>
       </div>
     </div>
   );

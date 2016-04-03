@@ -26,6 +26,7 @@ class ConnectionModal extends Component {
     }
 
     const handleClearDelete = () => onSetDelete(null);
+    const handleCancelEdit = () => onSetEdit(null);
 
     const handleAddConnection = (connection) => {
       const newConnections = Object.assign([], connections);
@@ -34,8 +35,11 @@ class ConnectionModal extends Component {
       this.setState({ editing: null });
     }
 
-    const handleEditConnection = (connection) => {
-
+    const onSaveEditConnection = (connection, index) => {
+      const newConnections = Object.assign([], connections);
+      newConnections[index] = connection;
+      handleSubmit(newConnections);
+      this.setState({ editing: null });
     }
     const { editing, deleting } = this.state;
     return (
@@ -51,17 +55,18 @@ class ConnectionModal extends Component {
             const handleSetEdit = () => onSetEdit(index);
             const handleDeleteConnection = () => onSetDelete(index);
             const handleConfirmDelete = () => onConfirmDelete(index);
+            const handleEditConnection = (connection) => onSaveEditConnection(connection, index);
 
             if (editing === index) {
               return (
-                <div className="row connection-row">
-                  <SimpleForm initialValues={v} />
+                <div className="row connection-row-editing connection-hover">
+                  <SimpleForm initialValues={v} {...{ onSubmit: handleEditConnection, handleCancelEdit }} />
                 </div>
               );
             }
             if (deleting === index) {
               return (
-                <div className="row connection-row" style={{ backgroundColor: 'red', color: 'white' }}>
+                <div className="row connection-row connection-hover" style={{ backgroundColor: 'red', color: 'white' }}>
                   <div className="col-lg-12">
                     <span style={{ color: 'white', fontWeight: 'bold' }}>Are you sure?</span>
                     <div className="pull-right">
@@ -73,7 +78,7 @@ class ConnectionModal extends Component {
               )
             }
             return (
-              <div className="row connection-row">
+              <div className="row connection-row connection-hover">
                 <div className="col-lg-3">{v.name}</div>
                 <div className="col-lg-6">{v.url}</div>
                 <div className="col-lg-3">{v.port}
@@ -85,14 +90,18 @@ class ConnectionModal extends Component {
               </div>
             );
           })}
-          <div className="row">
-            <div className="col-lg-12">
-              <div onClick={handleAdd}><span className="fa fa-plus"></span> Connection</div>
-            </div>
-          </div>
           {(editing === 'add') && (
-            <div>
-              <SimpleForm initialValues={{}} {...{ onSubmit: handleAddConnection }} />
+            <div className="row connection-row-editing connection-hover">
+              <SimpleForm initialValues={{}} {...{ onSubmit: handleAddConnection, handleCancelEdit }} />
+            </div>
+          )}
+          {(editing !== 'add') && (
+            <div className="row">
+              <div className="col-lg-12">
+                <div onClick={handleAdd} className="pull-right" style={{ color: 'green' }}>
+                  <span className="fa fa-plus connection-button"></span> Connection
+                </div>
+              </div>
             </div>
           )}
         </Modal>
