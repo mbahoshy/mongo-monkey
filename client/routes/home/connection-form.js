@@ -18,37 +18,35 @@ class SimpleForm extends Component {
       } = this.props;
     return (
       <form onSubmit={handleSubmit}>
-        <div className="row">
-          <div className="col-lg-3">
-            <div className="form-group">
-              <div>
-                <input className="form-control" type="text" placeholder="Name" {...name}/>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-6">
-            <div className="form-group">
-              <div>
-                <input className="form-control" type="text" placeholder="Url" {...url}/>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-3">
-            <div className="form-group">
-              <div>
-                <input className="form-control" type="text" placeholder="Port" {...port}/>
-              </div>
-            </div>
-          </div>
+        <div className="col-lg-3">
           <div>
-            <button type="submit" disabled={submitting}>
-              {submitting ? <i/> : <i/>} Submit
-            </button>
-            <button type="button" disabled={submitting} onClick={resetForm}>
-              Clear Values
-            </button>
+            <input className="form-control" type="text" placeholder="Name" {...name}/>
           </div>
         </div>
+        <div className="col-lg-6">
+          <div>
+            <input className="form-control" type="text" placeholder="Url" {...url}/>
+          </div>
+        </div>
+        <div className="col-lg-3">
+          <div className="input-group">
+            <input className="form-control" aria-describedby="conninput" type="text" placeholder="Port" {...port}/>
+            <span className="input-group-addon" id="conninput">
+              <span className="fa fa-check connection-button"></span>
+              <span className="fa fa-remove connection-button"></span>
+            </span>
+          </div>
+        </div>
+        {/*
+        <div>
+          <button type="submit" disabled={submitting}>
+            {submitting ? <i/> : <i/>} Submit
+          </button>
+          <button type="button" disabled={submitting} onClick={resetForm}>
+            Clear Values
+          </button>
+        </div>
+        */}
       </form>
     );
   }
