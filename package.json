@@ -1,12 +1,12 @@
 {
   "name": "mongo-monkey",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "clean": "rm -rf build && mkdir build",
     "build-server": "babel -d ./build ./server -s --ignore public",
-    "build": "ENVIRONMENT=production npm run clean && npm run build-server && webpack -p",
+    "build": "npm run clean && npm run build-server && ENVIRONMENT=build webpack -p",
     "start": "node build/bin/index.js",
     "dev": "babel-node server/bin/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"

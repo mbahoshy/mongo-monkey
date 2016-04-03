@@ -14,7 +14,7 @@ export default function clientRender(Container, reducers) {
 
   const middleware = [thunkMiddleware];
 
-  if (process.env.ENVIRONMENT !== 'production') {
+  if (process.env.ENVIRONMENT !== 'build') {
     middleware.push(createLogger());
   }
 
