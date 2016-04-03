@@ -6,7 +6,7 @@ class JsonArray extends Component {
     this.state = { isOpen: true }
   }
   render () {
-    const { data, padding } = this.props;
+    const { data, padding, start } = this.props;
     const { isOpen } = this.state;
     const style = { marginLeft: `${padding}px` }
     const toggleOpen = () => {
@@ -25,9 +25,10 @@ class JsonArray extends Component {
     }
 
     const html = data.map((v, index) => {
+      const displayIndex = start ? start + index : index;
       return (
         <div style={style} key={index}>
-          <span style={{ color: 'blue' }}>{index}</span>:
+          <span style={{ color: 'blue' }}>{displayIndex}</span>:
           <Json data={v} padding={padding} />
         </div>
       );
@@ -99,7 +100,7 @@ const JsonData = ({ data }) => {
   return (<span>{` ${data}`}</span>);
 }
 
-const Json = ({ data, padding }) => {
+const Json = ({ data, padding, start }) => {
   if (data === null || data === undefined) {
     return (<span>{` null`}</span>)
   }
@@ -108,7 +109,8 @@ const Json = ({ data, padding }) => {
       <JsonArray
         {...{
           data,
-          padding: padding,
+          padding,
+          start,
         }}
       />
     );

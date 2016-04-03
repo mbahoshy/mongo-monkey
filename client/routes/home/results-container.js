@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Json from 'components/json-structure';
 import Directory from 'components/create-directory';
 import FolderList from 'components/folder-list';
+import JsonContainer from 'components/json-container';
 
 const Files = ({ files, host, activeDb, value }) => {
   const structure = new Directory(files);
@@ -18,14 +18,13 @@ const Result = ({ data, view, host, activeDb, value}) => {
       <div>
         <Files files={data} {...{ host, activeDb, value }}/>
       </div>
-    )
+    );
   }
-
   return (
     <div>
-      <Json data={data} padding={10} />
+      <JsonContainer data={data} padding={10} />
     </div>
-  )
+  );
 }
 
 class ResultsContainer extends Component {
