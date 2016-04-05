@@ -5,6 +5,7 @@ import Json from 'components/json-structure';
 import ResultsContainer from 'routes/home/results-container';
 import DatabaseContainer from 'routes/home/database-container';
 import ConnectionModal from 'routes/home/connection-modal';
+import Search from 'routes/home/search';
 import MonkeySrc from 'imgs/monkey.png';
 import DancingSrc from 'imgs/dancing_banana.gif';
 import LoadingSrc from 'imgs/loading.gif';
@@ -67,6 +68,8 @@ class Home extends Component {
       marginTop: '30px',
       color: 'blue',
     }
+
+    const currentDb = databases ? databases.databases.find(x => x.name === activeDb) : null;
 		return (
 			<div className="container-fluid">
         <div className="row">
@@ -107,11 +110,7 @@ class Home extends Component {
           )}
         </div>
         <div className="col-lg-9">
-          <div className="input-group">
-            <textarea className="form-control" type="text" onChange={handleOnChange} value={value}  aria-describedby="qyinput" style={{ fontFamily: "monospace" }} >
-            </textarea>
-            <span className="input-group-addon" id="qyinput" onClick={handleSendQuery}>Send</span>
-          </div>
+          <Search {... { handleOnChange, value, handleSendQuery, currentDb }} />
           <br />
           {queryLoading && (
             <div className="loading-banana">
