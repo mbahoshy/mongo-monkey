@@ -1,4 +1,41 @@
 import React, { Component } from 'react';
+import ReactDOM, { findDOMNode } from 'react-dom';
+
+const getSuggestions = (collections, search, caret) => {
+
+  if (search.length < 3) return [];
+
+
+
+  const typing = search.substring(0, caret);
+
+  const newSearch = typing.substring(typing.lastIndexOf('db.'));
+
+  if (newSearch.length < 3) return [];
+
+  console.dir(newSearch)
+
+
+  const collectionCheck = checkCollectionSuggestions(collections, newSearch)
+  if (collectionCheck.length > 0) return collectionCheck;
+
+  return [];
+}
+
+const checkCollectionSuggestions = (collections, search) => {
+  return collections.filter(v => {
+    const compare = `db.${v.toLowerCase()}`;
+    if (compare === search) return false;
+    if (compare.indexOf(search) === 0) return true;
+    return false;
+  }).map(v => {
+    const compare = `db.${v.toLowerCase()}`;
+    return {
+      base: 'db.',
+      prev: v.substring(0, (search.length - 3)),
+      next: v.substring(search.length - 3, v.length) }
+  })
+}
 
 class Search extends Component {
   render() {
@@ -8,23 +45,36 @@ class Search extends Component {
       currentDb.collections.map(v => v.name) : [];
 
     const search = value.toLowerCase();
-    const suggestions = collections.filter(v => {
-      if (search.length < 3) return false;
-      const compare = `db.${v.toLowerCase()}`;
-      console.log(search, compare)
-      if (compare.indexOf(search) === 0) return true;
-      return false;
-    })
 
-    var x = getCaret(this.refs.search);
+    var caret = getCaret(this.refs.search);
+
+    const suggestions = getSuggestions(collections, search, caret);
+
+
+    const chooseSuggestion = (suggestion) => {
+      handleOnChange(`${value.substring(0, caret)}${suggestion}${value.substring(caret, value.length)}`);
+    }
+
+    const handleSearchChange = (e) => handleOnChange(e.target.value);
+
+    const formatValue = (value) => value.split('\n').map(v => <span>{v}<br/></span>)
+
+    const { offsetHeight, scrollTop } = this.refs.search ? this.refs.search : { offsetHeight: 0, scrollTop: 0 };
+
+    console.dir(this.refs.search)
+    console.dir(value.substring(0, caret))
     const style = {
       position: 'absolute',
-      top: '6',
-      zIndex: '100',
+      top: `${6 - scrollTop}px`,
+      zIndex: '2',
       left: '13px',
       fontFamily: 'monospace',
       fontSize: '14px',
       lineHeight: '1.42857143'
+    }
+    const hiddenStyle = {
+      visibility: 'hidden',
+      display: 'inline-block',
     }
     return (
       <div style={{ position: 'relative' }}>
@@ -33,7 +83,7 @@ class Search extends Component {
             ref="search"
             className="form-control"
             type="text"
-            onChange={handleOnChange}
+            onChange={handleSearchChange}
             value={value}
             aria-describedby="qyinput"
             style={{ fontFamily: "monospace" }}
@@ -42,13 +92,22 @@ class Search extends Component {
           <span className="input-group-addon" id="qyinput" onClick={handleSendQuery}>Send</span>
         </div>
         <div style={style}>
-          <span style={{ visibility: 'hidden' }}>{value}</span>
-          {suggestions.length <= 5 && suggestions.map(v =>(
-              <div className="suggestion">
-                <span>{`db.${v}`}</span>
+          <span style={hiddenStyle}>{formatValue(value.substring(0, caret))}</span>
+          {suggestions.length <= 5 && suggestions.map((v, index) => {
+            const handleChooseSuggestion = () => chooseSuggestion(v.next);
+            const subValue = Object.assign({}, { value }).value;
+            const sub = subValue.substring(0, caret - v.prev.length)
+            const sub2 = sub.substring(sub.lastIndexOf('\n'), sub.length)
+            console.dir(sub2)
+
+            return (
+              <div className="suggestion" key={index}>
+                <span className="invisible">{`${sub2}`}</span>
+                <span onClick={handleChooseSuggestion} style={{ zIndex: '100' }}>{v.prev}{v.next}</span>
               </div>
-            )
-          )}
+            );
+          })
+          }
         </div>
       </div>
     )

@@ -32,10 +32,8 @@ class Home extends Component {
       dbLoading,
       connections } = this.props;
 
-    const handleOnChange = (e) => {
-      const { value } = e.target;
-      this.setState({ value });
-    }
+    const handleOnChange = (value) => this.setState({ value });
+
     const handleSendQuery = () => {
       this.props.onSendQuery(host, activeDb, value);
     }
