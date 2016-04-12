@@ -84,7 +84,6 @@ class Search extends Component {
 
     var caret = getCaret(this.refs.search);
 
-    console.dir(e)
     const specialCodes = [
       186, // ;
       222, // '
@@ -176,23 +175,10 @@ class Search extends Component {
       handleOnChange(e.target.value);
     }
 
-    const formatValue = (value) => value.split('\n').map(v => <span>{v}<br/></span>)
 
     const { offsetHeight, scrollTop } = this.refs.search ? this.refs.search : { offsetHeight: 0, scrollTop: 0 };
 
-    const style = {
-      position: 'absolute',
-      top: `${6 - scrollTop}px`,
-      zIndex: '2',
-      left: '13px',
-      fontFamily: 'monospace',
-      fontSize: '14px',
-      lineHeight: '1.42857143'
-    }
-    const hiddenStyle = {
-      visibility: 'hidden',
-      display: 'inline-block',
-    }
+
     return (
       <div style={{ position: 'relative' }}>
         <div className="input-group">
@@ -209,6 +195,11 @@ class Search extends Component {
           <span className="input-group-addon" id="qyinput" onClick={handleSendQuery}>Send</span>
         </div>
         {suggestions.length > 0 && (
+          <div>
+            {getSuggestionHtml(suggestions, value, activeSuggestion, caret, chooseSuggestion, scrollTop)}
+          </div>
+        )}
+        {/*suggestions.length > 0 && (
           <div style={style}>
             <span style={hiddenStyle}>{formatValue(value.substring(0, caret))}</span>
             {suggestions.length <= 5 && suggestions.map((v, index) => {
@@ -227,10 +218,61 @@ class Search extends Component {
             })
             }
           </div>
-        )}
+        )*/}
       </div>
     )
   }
+}
+
+const formatValue = (value) => value.split('\n').map(v => <span>{v}<br/></span>)
+
+
+const getSuggestionHtml = (suggestions, value, activeSuggestion, caret, chooseSuggestion, scrollTop) => {
+
+  const style = {
+    position: 'absolute',
+    top: `${6 - scrollTop}px`,
+    zIndex: '2',
+    left: '8px',
+    fontFamily: 'monospace',
+    fontSize: '14px',
+    lineHeight: '1.42857143'
+  }
+  const hiddenStyle = {
+    visibility: 'hidden',
+    display: 'inline-block',
+  }
+
+  const suggestionsHtml = [];
+  let subval;
+  if (suggestions.length >= 5) return false;
+
+  suggestions.map((v, index) => {
+    const handleChooseSuggestion = () => chooseSuggestion(v.next, v.caretOffset);
+    const subValue = Object.assign({}, { value }).value;
+    const sub = subValue.substring(0, caret - v.prev.length);
+    subval = sub.substring(sub.lastIndexOf('\n'), sub.length);
+    const className = activeSuggestion === index ? "suggestion suggestion-active" : "suggestion";
+
+    suggestionsHtml.push(
+      <span>
+        <span className={className} key={index} onClick={handleChooseSuggestion} style={{ zIndex: '100' }}>{v.prev}{v.next}</span>
+        <br />
+      </span>
+    );
+  });
+
+  return (
+    <div style={style}>
+      <span style={hiddenStyle}>{formatValue(value.substring(0, caret))}</span>
+      <div>
+        <span className="invisible">{`${subval}`}</span>
+        <div className="suggestionContainer">
+          {suggestionsHtml}
+        </div>
+      </div>
+    </div>
+  )
 }
 
 function getCaret(el) {

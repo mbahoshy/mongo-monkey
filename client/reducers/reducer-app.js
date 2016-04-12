@@ -16,6 +16,8 @@ function activeTab (state=0, action) {
   switch (action.type) {
     case "SET_ACTIVE_TAB":
       return action.payload;
+    case "POST_QUERY_SUCCESS":
+      return 0;
     default:
       return state;
   }

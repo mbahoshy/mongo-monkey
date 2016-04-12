@@ -55,7 +55,7 @@ router.post('/api/query', function *() {
   const db = yield MongoClient.connectAsync(connectionString);
 
   for (let query of queries) {
-    if (!query || query === '') continue;
+    if (!query || query.trim() === '') continue;
     // const formattedQuery = formatQuery(query);
     results.push(yield runQuery(query, db));
   }
