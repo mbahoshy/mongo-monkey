@@ -1,8 +1,9 @@
 {
   "name": "mongo-monkey",
-  "version": "1.0.11",
+  "version": "1.0.2",
   "description": "",
   "main": "index.js",
+  "repository": "git://github.com/mbahoshy/mongo-monkey.git",
   "scripts": {
     "clean": "rm -rf build && mkdir build",
     "build-server": "babel -d ./build ./server -s --ignore public",
@@ -14,6 +15,16 @@
   "bin": {
     "mongo-monkey": "./build/bin/index.js"
   },
+  "keywords": [
+    "mongodb",
+    "client",
+    "macos mongodb",
+    "windows mongodb",
+    "mongo",
+    "multiple queries",
+    "gridfs",
+    "gridfs file browser"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
