@@ -28,7 +28,9 @@ class Search extends Component {
     const { keyCode, shiftKey } = e;
     const { value } = e.target;
     const { activeSuggestion } = this.state;
-    const { suggestions, caret } = this;
+    const { suggestions } = this;
+
+    const caret = getCaret(this.refs.search)
 
     if (!shiftKey && specialCodes.indexOf(keyCode) !== -1) {
       if (this.props.value[caret] === specialCodesDic[specialCodes.indexOf(keyCode)]) {
