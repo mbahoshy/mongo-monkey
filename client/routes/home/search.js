@@ -2,20 +2,22 @@ import React, { Component } from 'react';
 import ReactDOM, { findDOMNode } from 'react-dom';
 
 const methodSuggestions = [
-  'toArray()',
   'find()',
-  'update()',
+  'limit()',
   'remove()',
+  'sort()',
+  'toArray()',
+  'update()',
 ];
 
 const operatorSuggestions = [
-  'set',
+  'geoNear',
+  'group',
   'in',
   'match',
-  'group',
+  'set',
   'sum',
   'sort',
-  'geoNear',
 ]
 
 const generalSuggestions = [
@@ -122,7 +124,7 @@ class Search extends Component {
       if (this.props.value[caret] === specialCodesDic[specialCodes.indexOf(keyCode)]) {
         e.preventDefault();
         setSelectionRange(this.refs.search, caret + 1, caret + 1);
-        return;
+        return false;
       }
     }
 
@@ -130,22 +132,26 @@ class Search extends Component {
       if (this.props.value[caret] === shiftCodesDic[shiftCodes.indexOf(keyCode)]) {
         e.preventDefault();
         setSelectionRange(this.refs.search, caret + 1, caret + 1);
-        return;
+        return false;
       }
     }
 
     if (suggestions.length > 0 && (keyCode === 40 || keyCode === 38 || keyCode === 13)) {
       e.preventDefault();
       if (keyCode === 40) {
-        return this.setState({ activeSuggestion: activeSuggestion + 1 });
+        this.setState({ activeSuggestion: activeSuggestion + 1 });
+        return false;
       }
       if (keyCode === 38) {
-        return this.setState({ activeSuggestion: activeSuggestion - 1 });
+        this.setState({ activeSuggestion: activeSuggestion - 1 });
+        return false;
       }
       if (keyCode === 13) {
-        return this.chooseSuggestion(suggestions[activeSuggestion].next, suggestions[activeSuggestion].caretOffset);
+        this.chooseSuggestion(suggestions[activeSuggestion].next, suggestions[activeSuggestion].caretOffset);
+        return false;
       }
     }
+    return true;
   }
   render() {
     const { handleOnChange, value, handleSendQuery, currentDb } = this.props;
@@ -171,7 +177,6 @@ class Search extends Component {
     const { suggestions, chooseSuggestion } = this;
 
     const handleSearchChange = (e) => {
-
       handleOnChange(e.target.value);
     }
 
@@ -199,26 +204,6 @@ class Search extends Component {
             {getSuggestionHtml(suggestions, value, activeSuggestion, caret, chooseSuggestion, scrollTop)}
           </div>
         )}
-        {/*suggestions.length > 0 && (
-          <div style={style}>
-            <span style={hiddenStyle}>{formatValue(value.substring(0, caret))}</span>
-            {suggestions.length <= 5 && suggestions.map((v, index) => {
-              const handleChooseSuggestion = () => chooseSuggestion(v.next, v.caretOffset);
-              const subValue = Object.assign({}, { value }).value;
-              const sub = subValue.substring(0, caret - v.prev.length);
-              const sub2 = sub.substring(sub.lastIndexOf('\n'), sub.length);
-              const className = activeSuggestion === index ? "suggestion suggestion-active" : "suggestion";
-
-              return (
-                <div className={className} key={index}>
-                  <span className="invisible">{`${sub2}`}</span>
-                  <span onClick={handleChooseSuggestion} style={{ zIndex: '100' }}>{v.prev}{v.next}</span>
-                </div>
-              );
-            })
-            }
-          </div>
-        )*/}
       </div>
     )
   }
@@ -236,11 +221,13 @@ const getSuggestionHtml = (suggestions, value, activeSuggestion, caret, chooseSu
     left: '8px',
     fontFamily: 'monospace',
     fontSize: '14px',
-    lineHeight: '1.42857143'
+    lineHeight: '1.42857143',
+    pointerEvents: 'none',
   }
   const hiddenStyle = {
     visibility: 'hidden',
     display: 'inline-block',
+    pointerEvents: 'none',
   }
 
   const suggestionsHtml = [];
@@ -266,7 +253,7 @@ const getSuggestionHtml = (suggestions, value, activeSuggestion, caret, chooseSu
     <div style={style}>
       <span style={hiddenStyle}>{formatValue(value.substring(0, caret))}</span>
       <div>
-        <span className="invisible">{`${subval}`}</span>
+        <span className="invisible" style={{ pointerEvents: 'none' }}>{`${subval}`}</span>
         <div className="suggestionContainer">
           {suggestionsHtml}
         </div>
