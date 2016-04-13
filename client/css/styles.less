@@ -1,3 +1,7 @@
+
+@import "./bootstrap/less/bootstrap.less";
+@import "./font-awesome/less/font-awesome.less";
+
 .wut {
 	color: "blue"
 }
@@ -190,4 +194,34 @@ textarea {
   display: block;
   margin-left: auto;
   margin-right: auto;
+}
+
+.suggestion {
+  // background-color: rgba(45, 45, 175, 0.08);
+  // color: #BBB3B3;
+  // padding: 2px 10px;
+    // background-color: white;
+  color: grey;
+
+}
+
+.suggestion-active {
+  color: blue !important;
+}
+
+.suggestion:first-child {
+  border-radius: 5px 5px 0 0;
+}
+
+.suggestion:last-child {
+  border-radius: 0 0 5px 5px;
+}
+
+.suggestionContainer {
+  display: inline-block;
+  border: 1px solid #CCC;
+  background-color: whitesmoke;
+  padding: 2px 5px;
+  border-radius: 5px;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
 }
