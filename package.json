@@ -15,6 +15,16 @@
   "bin": {
     "mongo-monkey": "./build/bin/index.js"
   },
+  "keywords": [
+    "mongodb",
+    "client",
+    "macos mongodb",
+    "windows mongodb",
+    "mongo",
+    "multiple queries",
+    "gridfs",
+    "gridfs file browser"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
