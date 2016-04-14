@@ -2,13 +2,26 @@
 
 
 export const methodSuggestions = [
+  { value: 'aggregate()', caretOffset: 0 },
+  { value: 'count()', caretOffset: 0 },
   { value: 'createCollection()', caretOffset: -1 },
+  { value: 'createIndex()', caretOffset: -1 },
+  { value: 'distinct()', caretOffset: -1 },
+  { value: 'drop()', caretOffset: 0 },
   { value: 'find()', caretOffset: -1 },
+  { value: 'findOne()', caretOffset: -1 },
+  { value: 'findAndModify()', caretOffset: -1 },
+  { value: 'getCollectionNames()', caretOffset: 0 },
+  { value: 'getSiblingDB()', caretOffset: -1 },
+  { value: 'group()', caretOffset: -1 },
+  { value: 'insert()', caretOffset: -1 },
   { value: 'limit()', caretOffset: -1 },
   { value: 'remove()', caretOffset: -1 },
+  { value: 'save()', caretOffset: -1 },
   { value: 'sort()', caretOffset: -1 },
   { value: 'toArray()', caretOffset: 0 },
   { value: 'update()', caretOffset: -1 },
+  { value: 'updateOne()', caretOffset: -1 },
 ];
 
 export const operatorSuggestions = [

@@ -110,17 +110,21 @@ class JsonContainer extends Component {
     const { data } = this.props;
     const maxRows = 10;
     const maxPages = 8;
+
+    const showPagination = Array.isArray(data);
+    const lengthData = showPagination ? data.length : 0
+
     const { currentPage } = this.state;
     let displayData = data;
-    if (data.length > maxRows) {
+    if (lengthData > maxRows) {
       const copiedData = Object.assign([], data);
       displayData = copiedData.splice(maxRows * currentPage, maxRows);
     }
-    const numPages = Math.ceil(data.length / maxRows);
+
+    const numPages = Math.ceil(lengthData / maxRows);
     const onPageClick = (index) => {
       this.setState({ currentPage: index });
     }
-    const showPagination = Array.isArray(data);
     const pagination = (
       <div className="row">
         <div className="col-lg-12">
