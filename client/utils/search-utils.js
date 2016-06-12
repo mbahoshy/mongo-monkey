@@ -35,7 +35,7 @@ export const operatorSuggestions = [
 ]
 
 export const generalSuggestions = [
-  { value: 'ObjectID()', caretOffset: -1 },
+  { value: 'ObjectId()', caretOffset: -1 },
 ]
 
 

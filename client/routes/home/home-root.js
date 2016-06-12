@@ -30,6 +30,7 @@ class Home extends Component {
       onSetConnections,
       queryLoading,
       dbLoading,
+      resultKey,
       connections } = this.props;
 
     const handleOnChange = (value) => this.setState({ value });
@@ -117,7 +118,7 @@ class Home extends Component {
             </div>
           )}
           {!queryLoading && (
-            <ResultsContainer {...{ results, onSetActiveTab, activeTab, onToggleView, view, host, activeDb, value}} />
+            <ResultsContainer {...{ results, onSetActiveTab, activeTab, onToggleView, view, host, activeDb, value, resultKey}} />
           )}
         </div>
 			</div>
@@ -134,6 +135,7 @@ const mapState = state => ({
   connections: state.appStore.connections,
   queryLoading: state.loadingStore.loading.queryLoading,
   dbLoading: state.loadingStore.loading.dbLoading,
+  resultKey: state.appStore.resultKey,
 });
 const mapDispatch = dispatch => ({
   onSendQuery: (host, activeDb, query) => dispatch(sendQuery(host, activeDb, query)),

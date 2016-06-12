@@ -51,5 +51,13 @@ function connections (state = [], action) {
   }
 }
 
+function resultKey (state = null, action) {
+  switch (action.type) {
+    case 'POST_QUERY_SUCCESS':
+      return new Date().getTime();
+    default:
+      return state;
+  }
+}
 
-export default combineReducers({results, activeTab, databases, activeDb, connections})
+export default combineReducers({results, activeTab, databases, activeDb, connections, resultKey})

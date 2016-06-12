@@ -27,9 +27,19 @@ const Result = ({ data, view, host, activeDb, value}) => {
   );
 }
 
+const componentUpdateKeys = (props, nextProps, ...args) => {
+  for (var i = 0; i < args.length; i++) {
+    if(props[args[i]] !== nextProps[args[1]]) return true;
+  }
+  return false;
+}
+
 class ResultsContainer extends Component {
+  shouldComponentUpdate(props) {
+    return componentUpdateKeys(props, this.props, 'resultKey', 'view', 'activeTab');
+  }
   render () {
-    const { results, onSetActiveTab, activeTab, onToggleView, view, host, activeDb, value} = this.props;
+    const { results, onSetActiveTab, activeTab, onToggleView, view, host, activeDb, value, resultKey } = this.props;
     if (!results || results.length < 1) return false;
     const tabs = results.map((v, index) => {
       const className = activeTab === index ? "active" : "";

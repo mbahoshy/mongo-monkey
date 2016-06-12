@@ -46,7 +46,7 @@ class Search extends Component {
       }
     }
 
-    if (suggestions.length > 0 && (keyCode === 40 || keyCode === 38 || keyCode === 13)) {
+    if (suggestions.length > 0 && (keyCode === 40 || keyCode === 38 || keyCode === 13 || keyCode === 9)) {
       e.preventDefault();
       if (keyCode === 40 && activeSuggestion + 1 < suggestions.length) {
         return this.setState({ activeSuggestion: activeSuggestion + 1 });
@@ -54,7 +54,8 @@ class Search extends Component {
       if (keyCode === 38 && activeSuggestion > 0) {
         return this.setState({ activeSuggestion: activeSuggestion - 1 });
       }
-      if (keyCode === 13) {
+      if (keyCode === 13 || keyCode === 9) {
+        console.dir(suggestions[activeSuggestion]);
         return this.chooseSuggestion(suggestions[activeSuggestion].next, suggestions[activeSuggestion].caretOffset);
       }
     }
