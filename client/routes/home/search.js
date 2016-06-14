@@ -37,7 +37,9 @@ class Search extends Component {
     const { activeSuggestion, showSuggestion, caret } = this.state;
     const { suggestions } = this;
 
-    if (keyCode === 37 || keyCode === 39) {
+    console.dir(keyCode);
+
+    if (keyCode === 37 || keyCode === 39 || keyCode === 40 || keyCode === 38) {
       this.suggestions = [];
       this.setState({ showSuggestion: false });
       setTimeout(this.forceUpdate.bind(this), 50)
@@ -89,7 +91,7 @@ class Search extends Component {
 
     if (suggestions.length === 0 && keyCode === 9) {
       e.preventDefault();
-      return this.chooseSuggestion('  ', 1)
+      return this.chooseSuggestion('  ', 0)
     }
 
     if (ctrlKey && keyCode === 13) {
@@ -209,15 +211,138 @@ const TextOverlay = ({ value, scrollTop, caret }) => {
   }
   return (
     <div style={style}>
-      {test(value, caret)}
+      {matt(value, caret)}
     </div>
   )
 }
 
 const colors = {
   blue: { color: 'blue' },
-  cursor: { letterSpacing: '-4px', marginLeft: '-4px', textDecoration: 'blink' },
+  green: { color: 'green' },
+  orange: { color: 'orange' },
+  red: { color: 'red' },
+  black: { color: 'black' },
+  cursor: { letterSpacing: '-4px', marginLeft: '-4px', textDecoration: 'blink', color: 'black' },
 };
+
+const getStuff = (value, idx, caret, hasCaret, endCaret) => {
+  const char = value[idx];
+
+  // map caret to string position
+  if ((!value[idx - 1] || value[idx - 1] === ' ') && value.slice(idx, idx + 4) === 'true') {
+    return {
+      diff: 4,
+      html: <span key={idx} style={colors.orange}>{hasCaret}{`true`}{endCaret}</span>
+    };
+  }
+
+  if ((!value[idx - 1] || value[idx - 1] === ' ') && value.slice(idx, idx + 5) === 'false') {
+    return {
+      diff: 5,
+      html: <span key={idx} style={colors.orange}>{hasCaret}{`false`}{endCaret}</span>
+    };
+  }
+
+  if (char === ':' || char === ',') {
+    return {
+      diff: 1,
+      html: <span key={idx} style={colors.black}>{hasCaret}{char}{endCaret}</span>
+    };
+  }
+
+  if (char === '\n') {
+    return {
+      diff: 1,
+      html: <span key={idx}>{hasCaret}<br/>{endCaret}</span>
+    };
+  }
+  if (char === ' ') {
+    return {
+      diff: 1,
+      html: <span key={idx}>{hasCaret}&nbsp;{endCaret}</span>
+    };
+  }
+  if (char === '{') {
+    const chars = [<span key={idx}>{hasCaret}<span style={colors.blue}>{`{`}</span>{endCaret}</span>];
+    let newIdx = idx + 1;
+    while (newIdx < value.length) {
+      const newHasCaret = caret === newIdx ? <span style={colors.cursor} className="blink">|</span> : '';
+      const newEndCaret = caret === newIdx + 1 ? <span style={colors.cursor} className="blink">|</span> : '';
+      if (value[newIdx] === '}') break;
+      const { html, diff } = getStuff(value, newIdx, caret, newHasCaret, newEndCaret);
+      chars.push(<span key={newIdx}>{newHasCaret}<span style={colors.red}>{html}</span>{newEndCaret}</span>);
+      newIdx = newIdx + diff;
+    }
+    return {
+      diff: newIdx - idx,
+      html: <span key={idx}>{[...chars]}</span>
+    }
+  }
+  if (char === '{' || char === '}') {
+    return {
+      diff: 1,
+      html: <span>{hasCaret}<span key={idx} style={colors.blue}>{char}</span>{endCaret}</span>
+    };
+  }
+
+  if (char === '\'') {
+    const chars = [<span key={idx}>{hasCaret}<span style={colors.green}>{`'`}</span>{endCaret}</span>];
+    let newIdx = idx + 1;
+    while (newIdx < value.length) {
+      const newHasCaret = caret === newIdx ? <span style={colors.cursor} className="blink">|</span> : '';
+      const newEndCaret = caret === newIdx + 1 ? <span style={colors.cursor} className="blink">|</span> : '';
+      chars.push(<span key={newIdx}>{newHasCaret}<span style={colors.green}>{value[newIdx]}</span>{newEndCaret}</span>);
+      if (value[newIdx] === '\'') {
+        newIdx++;
+        break;
+      }
+      newIdx++;
+    }
+    return {
+      diff: newIdx - idx,
+      html: <span key={idx}>{[...chars]}</span>
+    }
+  }
+
+  if (char === '"') {
+    const chars = [<span key={idx}>{hasCaret}<span style={colors.green}>{`"`}</span>{endCaret}</span>];
+    let newIdx = idx + 1;
+    while (newIdx < value.length) {
+      const newHasCaret = caret === newIdx ? <span style={colors.cursor} className="blink">|</span> : '';
+      const newEndCaret = caret === newIdx + 1 ? <span style={colors.cursor} className="blink">|</span> : '';
+      chars.push(<span key={newIdx}>{newHasCaret}<span style={colors.green}>{value[newIdx]}</span>{newEndCaret}</span>);
+      if (value[newIdx] === '"') {
+        newIdx++;
+        break;
+      }
+      newIdx++;
+    }
+    return {
+      diff: newIdx - idx,
+      html: <span key={idx}>{[...chars]}</span>
+    }
+  }
+
+  return {
+    diff: 1,
+    html: <span key={idx}>{hasCaret}{char}{endCaret}</span>
+  };
+}
+
+const matt = (value, caret) => {
+  if (!value) return <span style={colors.cursor} className="blink">|</span>;
+  let idx = 0;
+  const res = [];
+  while (idx < value.length) {
+    const hasCaret = caret === idx ? <span style={colors.cursor} className="blink">|</span> : '';
+    const endCaret = caret === idx + 1 ? <span style={colors.cursor} className="blink">|</span> : '';
+    const { html, diff } = getStuff(value, idx, caret, hasCaret, endCaret);
+    res.push(html)
+    idx = idx + diff
+  }
+
+  return res;
+}
 
 const test = (value, caret, idx = 0, res = []) => {
   console.log(value, caret, idx);
