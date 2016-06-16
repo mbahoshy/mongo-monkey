@@ -40,6 +40,8 @@ const getHtml = (value, idx, caret) => {
     };
   }
 
+  // if ((!value[idx - 1] || another.indexOf(value[idx - 1]) !== -1) && (!isNaN(char)))
+
   if (char === ':' || char === ',') {
     return {
       diff: 1,

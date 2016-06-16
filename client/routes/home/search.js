@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM, { findDOMNode } from 'react-dom';
+import JsonInput from 'utils/json-input';
 import {
   methodSuggestions,
   operatorSuggestions,
@@ -39,57 +40,6 @@ class Search extends Component {
     const { activeSuggestion, showSuggestion, caret } = this.state;
     const { suggestions } = this;
 
-    console.dir(keyCode);
-
-    if (keyCode === 37 || keyCode === 39 || keyCode === 40 || keyCode === 38) {
-      this.suggestions = [];
-      this.setState({ showSuggestion: false });
-      setTimeout(this.forceUpdate.bind(this), 50)
-      return;
-    }
-
-    if (!shiftKey && specialCodes.indexOf(keyCode) !== -1) {
-      if (this.props.value[caret] === specialCodesDic[specialCodes.indexOf(keyCode)]) {
-        e.preventDefault();
-        setSelectionRange(this.refs.search, caret + 1, caret + 1);
-        setTimeout(this.forceUpdate.bind(this), 50)
-        return
-      }
-      if ('[' === specialCodesDic[specialCodes.indexOf(keyCode)]) {
-        e.preventDefault();
-        this.chooseSuggestion('[]', -1)
-        return
-      }
-      if ('\'' === specialCodesDic[specialCodes.indexOf(keyCode)]) {
-        e.preventDefault();
-        this.chooseSuggestion('\'\'', -1)
-        return
-      }
-    }
-
-    if (shiftKey && shiftCodes.indexOf(keyCode) !== -1) {
-      if (this.props.value[caret] === shiftCodesDic[shiftCodes.indexOf(keyCode)]) {
-        e.preventDefault();
-        setSelectionRange(this.refs.search, caret + 1, caret + 1);
-        setTimeout(this.forceUpdate.bind(this), 50)
-        return
-      }
-      if ('{' === shiftCodesDic[shiftCodes.indexOf(keyCode)]) {
-        e.preventDefault();
-        this.chooseSuggestion('{}', -1)
-        return
-      }
-      if ('(' === shiftCodesDic[shiftCodes.indexOf(keyCode)]) {
-        e.preventDefault();
-        this.chooseSuggestion('()', -1)
-        return
-      }
-      if ('"' === shiftCodesDic[shiftCodes.indexOf(keyCode)]) {
-        e.preventDefault();
-        this.chooseSuggestion('""', -1)
-        return
-      }
-    }
 
     if (suggestions.length === 0 && keyCode === 9) {
       e.preventDefault();
@@ -115,6 +65,7 @@ class Search extends Component {
     }
     this.forceUpdate();
   }
+
   handleSetCaret() {
     const caret = getCaret(this.refs.search);
     this.setState({ caret });
@@ -123,6 +74,7 @@ class Search extends Component {
     this.forceUpdate();
   }
   componentWillReceiveProps(props) {
+    console.dir(props);
     const { value, currentDb } = props;
     const { activeSuggestion } = this.state;
 
@@ -141,7 +93,7 @@ class Search extends Component {
     const { handleOnChange, value, handleSendQuery, currentDb } = this.props;
     const { activeSuggestion, showSuggestion, caret } = this.state;
 
-    const { handleOnScroll, handleSetCaret } = this;
+    const { handleOnScroll, handleSetCaret, handleKeyDown } = this;
 
     const collections = currentDb ?
       currentDb.collections.map(v => v.name) : [];
@@ -158,9 +110,9 @@ class Search extends Component {
 
     const { suggestions, chooseSuggestion } = this;
 
-    const handleSearchChange = (e) => {
-      if (showSuggestion === false) this.setState({ showSuggestion: true });
-      handleOnChange(e.target.value);
+    const handleSearchChange = (value) => {
+      // if (showSuggestion === false) this.setState({ showSuggestion: true });
+      handleOnChange(value);
     }
 
     const { offsetHeight, scrollTop } = this.refs.search ? this.refs.search : { offsetHeight: 0, scrollTop: 0 };
@@ -172,30 +124,38 @@ class Search extends Component {
     const handleOnBlur = () => this.setState({ showSuggestion: false });
 
     return (
-      <div style={{ position: 'relative' }}>
-        <div className="input-group" style={{ overflow: 'hidden' }}>
-          <textarea
-            onFocus={handleOnFocus}
-            onBlur={handleOnBlur}
-            onScroll={handleSetCaret}
-            onClick={handleSetCaret}
-            ref="search"
-            className="form-control"
-            type="text"
-            onChange={handleSearchChange}
-            value={value}
-            aria-describedby="qyinput"
-            style={{
-              fontFamily: "monospace",
-              color: 'transparent',
-            }}
-          >
-          </textarea>
-          <span className="input-group-addon" id="qyinput" onClick={handleSendQuery}>Send</span>
-            <TextOverlay value={value} scrollTop={scrollTop} caret={caret} />
+      <div>
+        {/*
+        <div style={{ position: 'relative' }}>
+          <div className="input-group" style={{ overflow: 'hidden' }}>
+            <textarea
+              onFocus={handleOnFocus}
+              onBlur={handleOnBlur}
+              onScroll={handleSetCaret}
+              onClick={handleSetCaret}
+              ref="search"
+              className="form-control"
+              type="text"
+              onChange={handleSearchChange}
+              value={value}
+              aria-describedby="qyinput"
+              style={{
+                fontFamily: "monospace",
+                color: 'transparent',
+              }}
+            >
+            </textarea>
+            <span className="input-group-addon" id="qyinput" onClick={handleSendQuery}>Send</span>
+              <TextOverlay value={value} scrollTop={scrollTop} caret={caret} />
+          </div>
+          {suggestions.length > 0 && showSuggestion && getSuggestionHtml(suggestions, value, activeSuggestion, caret, chooseSuggestion, scrollTop)}
         </div>
-        {suggestions.length > 0 /*&& showSuggestion*/ && getSuggestionHtml(suggestions, value, activeSuggestion, caret, chooseSuggestion, scrollTop)}
+        */}
+        <JsonInput onChange={handleSearchChange} value={value} onKeyDown={handleKeyDown}/>
+        {suggestions.length > 0 && showSuggestion && getSuggestionHtml(suggestions, value, activeSuggestion, caret, chooseSuggestion, scrollTop)}
+
       </div>
+
     )
   }
 }
