@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM, { findDOMNode } from 'react-dom';
+import JsonInput from 'utils/json-input';
 import {
   methodSuggestions,
   operatorSuggestions,
@@ -13,37 +14,34 @@ import {
   shiftCodesDic,
 } from 'utils/search-utils';
 
+import formatter from 'utils/formatter-utils';
+
 class Search extends Component {
   constructor (props) {
     super(props);
     this.handleKeyDown = this.handleKeyDown.bind(this);
-    this.state = { activeSuggestion: 0, showSuggestion: false };
-    this.suggestions = [];
-  }
-  componentDidMount() {
-    window.addEventListener('keydown', this.handleKeyDown)
+    this.state = { activeSuggestion: 0, showSuggestion: false, suggestions: [] };
   }
   handleKeyDown(e) {
     // 40 arrow down, 38 arrow up, 13 enter
-    const { keyCode, shiftKey } = e;
+    const { keyCode, ctrlKey } = e;
     const { value } = e.target;
-    const { activeSuggestion } = this.state;
-    const { suggestions } = this;
+    const { handleSendQuery, currentDb, value: searchValue } = this.props;
+    const { activeSuggestion, showSuggestion } = this.state;
 
-    const caret = getCaret(this.refs.search)
+    const jsonInput = this.refs.jsonInput || {};
+    const { chooseSuggestion } = jsonInput;
+    const { caret } = jsonInput.state || {};
 
-    if (!shiftKey && specialCodes.indexOf(keyCode) !== -1) {
-      if (this.props.value[caret] === specialCodesDic[specialCodes.indexOf(keyCode)]) {
-        e.preventDefault();
-        return setSelectionRange(this.refs.search, caret + 1, caret + 1);
-      }
-    }
+    const collections = currentDb ? currentDb.collections.map(v => v.name) : [];
+    const search = searchValue.toLowerCase();
+    const suggestions = getSuggestions(collections, search, caret);
 
-    if (shiftKey && shiftCodes.indexOf(keyCode) !== -1) {
-      if (this.props.value[caret] === shiftCodesDic[shiftCodes.indexOf(keyCode)]) {
-        e.preventDefault();
-        return setSelectionRange(this.refs.search, caret + 1, caret + 1);
-      }
+    this.setState({ suggestions });
+
+    if (ctrlKey && keyCode === 13) {
+      e.preventDefault();
+      handleSendQuery();
     }
 
     if (suggestions.length > 0 && (keyCode === 40 || keyCode === 38 || keyCode === 13 || keyCode === 9)) {
@@ -55,75 +53,39 @@ class Search extends Component {
         return this.setState({ activeSuggestion: activeSuggestion - 1 });
       }
       if (keyCode === 13 || keyCode === 9) {
-        console.dir(suggestions[activeSuggestion]);
-        return this.chooseSuggestion(suggestions[activeSuggestion].next, suggestions[activeSuggestion].caretOffset);
+        chooseSuggestion(suggestions[activeSuggestion].next, suggestions[activeSuggestion].caretOffset);
+        this.setState({ suggestions: [], activeSuggestion: 0 });
+        return;
       }
     }
+    this.forceUpdate();
   }
-  componentWillReceiveProps(props) {
-    const { value, currentDb } = props;
-    const { activeSuggestion } = this.state;
 
-    const collections = currentDb ?
-      currentDb.collections.map(v => v.name) : [];
-
-    const search = value.toLowerCase();
-
-    this.caret = getCaret(this.refs.search);
-
-    this.suggestions = getSuggestions(collections, search, this.caret);
-
-    if (this.suggestions.length < activeSuggestion + 1) this.setState({ activeSuggestion: 0 });
-  }
   render() {
     const { handleOnChange, value, handleSendQuery, currentDb } = this.props;
-    const { activeSuggestion, showSuggestion } = this.state;
+    const { activeSuggestion, showSuggestion, suggestions } = this.state;
 
-    const { caret } = this;
+    const { handleKeyDown } = this;
 
-    const collections = currentDb ?
-      currentDb.collections.map(v => v.name) : [];
+    const jsonInput = this.refs.jsonInput || {};
+    const { caret, focus } = jsonInput.state || {};
+    const { chooseSuggestion } = jsonInput;
 
-    this.chooseSuggestion = (suggestion, caretOffset) => {
-      handleOnChange(`${value.substring(0, caret)}${suggestion}${value.substring(caret, value.length)}`);
-      setTimeout(() => {
-        const position = caret + caretOffset + suggestion.length;
-        setSelectionRange(this.refs.search, position, position);
-        this.setState({ showSuggestion: false });
-      })
-    }
-
-    const { suggestions, chooseSuggestion } = this;
+    const { search } = jsonInput.refs || {}
+    const { offsetHeight, scrollTop } = search ? search : { offsetHeight: 0, scrollTop: 0 };
 
     const handleSearchChange = (e) => {
-      if (showSuggestion === false) this.setState({ showSuggestion: true });
-      handleOnChange(e.target.value);
+      const { value } = e.target;
+      // if (showSuggestion === false) this.setState({ showSuggestion: true });
+      handleOnChange(value);
     }
-
-    const { offsetHeight, scrollTop } = this.refs.search ? this.refs.search : { offsetHeight: 0, scrollTop: 0 };
-
-    const handleOnFocus = () => this.setState({ showSuggestion: true });
-    const handleOnBlur = () => this.setState({ showSuggestion: false });
 
     return (
       <div style={{ position: 'relative' }}>
-        <div className="input-group">
-          <textarea
-            onFocus={handleOnFocus}
-            onBlur={handleOnBlur}
-            ref="search"
-            className="form-control"
-            type="text"
-            onChange={handleSearchChange}
-            value={value}
-            aria-describedby="qyinput"
-            style={{ fontFamily: "monospace" }}
-          >
-          </textarea>
-          <span className="input-group-addon" id="qyinput" onClick={handleSendQuery}>Send</span>
-        </div>
-        {suggestions.length > 0 && showSuggestion && getSuggestionHtml(suggestions, value, activeSuggestion, caret, chooseSuggestion, scrollTop)}
+        <JsonInput onChange={handleSearchChange} value={value} onKeyDown={handleKeyDown} ref="jsonInput" className="form-control"/>
+        {suggestions.length > 0 && focus && getSuggestionHtml(suggestions, value, activeSuggestion, caret, chooseSuggestion, scrollTop)}
       </div>
+
     )
   }
 }
