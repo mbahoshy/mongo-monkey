@@ -35,11 +35,13 @@ const TextOverlay = ({ value, scrollTop, caret }) => {
 class JsonInput extends Component {
   constructor(props) {
     super(props);
+    this.handleOnFocus = this.handleOnFocus.bind(this);
+    this.handleOnBlur = this.handleOnBlur.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleOnScroll = this.handleOnScroll.bind(this);
     this.handleSetCaret = this.handleSetCaret.bind(this);
     this.chooseSuggestion = this.chooseSuggestion.bind(this);
-    this.state = { caret: 0 };
+    this.state = { caret: 0, focus: false };
   }
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown)
@@ -62,8 +64,12 @@ class JsonInput extends Component {
     // 40 arrow down, 38 arrow up, 13 enter
     const { keyCode, shiftKey, ctrlKey } = e;
     const { value } = e.target;
-    const { activeSuggestion, showSuggestion, caret } = this.state;
     const { suggestions } = this;
+
+    const caret = getCaret(this.refs.search);
+    this.setState({ caret });
+
+    this.props.onKeyDown ? this.props.onKeyDown(e) : () => {};
 
     // arrow keys
     if (keyCode === 37 || keyCode === 39 || keyCode === 40 || keyCode === 38) {
@@ -119,7 +125,6 @@ class JsonInput extends Component {
       return this.chooseSuggestion('  ', 0)
     }
 
-    this.props.onKeyDown ? this.props.onKeyDown(e) : () => {};
     this.forceUpdate();
   }
   handleSetCaret() {
@@ -129,11 +134,16 @@ class JsonInput extends Component {
   handleOnScroll(e) {
     this.forceUpdate();
   }
+  handleOnFocus(e) {
+    this.setState({ focus: true });
+    this.handleSetCaret();
+  }
+  handleOnBlur(e) {
+    this.setState({ focus: false });
+    this.handleSetCaret();
+  }
   render() {
-    const handleOnFocus = () => {
-      this.handleSetCaret();
-    }
-    const { handleSetCaret } = this;
+    const { handleSetCaret, handleOnBlur, handleOnFocus } = this;
     const { value, onChange } = this.props;
     const { caret } = this.state;
     const { offsetHeight, scrollTop } = this.refs.search ? this.refs.search : { offsetHeight: 0, scrollTop: 0 };
@@ -143,7 +153,7 @@ class JsonInput extends Component {
         <div style={{ overflow: 'hidden' }}>
           <textarea
             onFocus={handleOnFocus}
-            onBlur={handleOnFocus}
+            onBlur={handleOnBlur}
             onScroll={handleSetCaret}
             onClick={handleSetCaret}
             ref="search"

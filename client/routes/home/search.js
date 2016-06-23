@@ -22,7 +22,7 @@ class Search extends Component {
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleOnScroll = this.handleOnScroll.bind(this);
     this.handleSetCaret = this.handleSetCaret.bind(this);
-    this.state = { activeSuggestion: 0, showSuggestion: false };
+    this.state = { activeSuggestion: 0, showSuggestion: false, suggestions: [] };
     this.suggestions = [];
   }
   componentDidMount() {
@@ -36,15 +36,24 @@ class Search extends Component {
     // 40 arrow down, 38 arrow up, 13 enter
     const { keyCode, shiftKey, ctrlKey } = e;
     const { value } = e.target;
-    const { handleSendQuery } = this.props;
-    const { activeSuggestion, showSuggestion, caret } = this.state;
-    const { suggestions } = this;
+    const { handleSendQuery, currentDb, value: searchValue } = this.props;
+    const { activeSuggestion, showSuggestion } = this.state;
+    // const { suggestions } = this;
+    const { caret } = this.refs.jsonInput.state;
+    const { chooseSuggestion } = this.refs.jsonInput;
 
+    const collections = currentDb ? currentDb.collections.map(v => v.name) : [];
+    const search = searchValue.toLowerCase();
+    const suggestions = getSuggestions(collections, search, caret);
 
-    if (suggestions.length === 0 && keyCode === 9) {
-      e.preventDefault();
-      return this.chooseSuggestion('  ', 0)
-    }
+    this.setState({ suggestions });
+
+    console.dir(suggestions);
+
+    // if (suggestions.length === 0 && keyCode === 9) {
+    //   e.preventDefault();
+    //   return chooseSuggestion('  ', 0)
+    // }
 
     if (ctrlKey && keyCode === 13) {
       e.preventDefault();
@@ -60,7 +69,7 @@ class Search extends Component {
         return this.setState({ activeSuggestion: activeSuggestion - 1 });
       }
       if (keyCode === 13 || keyCode === 9) {
-        return this.chooseSuggestion(suggestions[activeSuggestion].next, suggestions[activeSuggestion].caretOffset);
+        return chooseSuggestion(suggestions[activeSuggestion].next, suggestions[activeSuggestion].caretOffset);
       }
     }
     this.forceUpdate();
@@ -74,7 +83,6 @@ class Search extends Component {
     this.forceUpdate();
   }
   componentWillReceiveProps(props) {
-    console.dir(props);
     const { value, currentDb } = props;
     const { activeSuggestion } = this.state;
 
@@ -91,69 +99,27 @@ class Search extends Component {
   }
   render() {
     const { handleOnChange, value, handleSendQuery, currentDb } = this.props;
-    const { activeSuggestion, showSuggestion, caret } = this.state;
+    const { activeSuggestion, showSuggestion, suggestions } = this.state;
 
     const { handleOnScroll, handleSetCaret, handleKeyDown } = this;
 
-    const collections = currentDb ?
-      currentDb.collections.map(v => v.name) : [];
-
-    this.chooseSuggestion = (suggestion, caretOffset) => {
-      handleOnChange(`${value.substring(0, caret)}${suggestion}${value.substring(caret, value.length)}`);
-      setTimeout(() => {
-        const position = caret + caretOffset + suggestion.length;
-        setSelectionRange(this.refs.search, position, position);
-        this.suggestions = [];
-        this.setState({ showSuggestion: false });
-      })
-    }
-
-    const { suggestions, chooseSuggestion } = this;
+    const jsonInput = this.refs.jsonInput || {};
+    console.dir(jsonInput)
+    const { chooseSuggestion } = jsonInput;
+    const { caret, focus } = jsonInput.state || {};
 
     const handleSearchChange = (value) => {
       // if (showSuggestion === false) this.setState({ showSuggestion: true });
       handleOnChange(value);
     }
 
-    const { offsetHeight, scrollTop } = this.refs.search ? this.refs.search : { offsetHeight: 0, scrollTop: 0 };
-
-    const handleOnFocus = () => {
-      this.setState({ showSuggestion: true });
-      handleSetCaret();
-    }
-    const handleOnBlur = () => this.setState({ showSuggestion: false });
+    const { search } = jsonInput.refs || {}
+    const { offsetHeight, scrollTop } = search ? search : { offsetHeight: 0, scrollTop: 0 };
 
     return (
       <div>
-        {/*
-        <div style={{ position: 'relative' }}>
-          <div className="input-group" style={{ overflow: 'hidden' }}>
-            <textarea
-              onFocus={handleOnFocus}
-              onBlur={handleOnBlur}
-              onScroll={handleSetCaret}
-              onClick={handleSetCaret}
-              ref="search"
-              className="form-control"
-              type="text"
-              onChange={handleSearchChange}
-              value={value}
-              aria-describedby="qyinput"
-              style={{
-                fontFamily: "monospace",
-                color: 'transparent',
-              }}
-            >
-            </textarea>
-            <span className="input-group-addon" id="qyinput" onClick={handleSendQuery}>Send</span>
-              <TextOverlay value={value} scrollTop={scrollTop} caret={caret} />
-          </div>
-          {suggestions.length > 0 && showSuggestion && getSuggestionHtml(suggestions, value, activeSuggestion, caret, chooseSuggestion, scrollTop)}
-        </div>
-        */}
-        <JsonInput onChange={handleSearchChange} value={value} onKeyDown={handleKeyDown}/>
-        {suggestions.length > 0 && showSuggestion && getSuggestionHtml(suggestions, value, activeSuggestion, caret, chooseSuggestion, scrollTop)}
-
+        <JsonInput onChange={handleSearchChange} value={value} onKeyDown={handleKeyDown} ref="jsonInput"/>
+        {suggestions.length > 0 && focus && getSuggestionHtml(suggestions, value, activeSuggestion, caret, chooseSuggestion, scrollTop)}
       </div>
 
     )
@@ -186,59 +152,6 @@ const colors = {
   black: { color: 'black' },
   cursor: { letterSpacing: '-4px', marginLeft: '-4px', textDecoration: 'blink', color: 'black' },
 };
-
-const getStuff = () => {
-
-}
-
-const matt = () => {
-
-}
-
-const test = (value, caret, idx = 0, res = []) => {
-  console.log(value, caret, idx);
-  if (!value) return [<span style={colors.cursor} className="blink">|</span>];
-  if (caret === idx) {
-    res.push(<span>{value[idx]}<span style={colors.cursor} className="blink">|</span></span>);
-    return test(value, caret, idx + 1, res);
-  }
-  // if (caret )
-  // if (caret === idx + 1) {
-  //   res.push(<span><span style={colors.cursor} className="blink">|</span>{value[idx]}</span>);
-  //   return test(value, caret, idx + 1, res);
-  // }
-  if (!value[idx]) return res;
-
-  res.push(<span>{value[idx]}</span>)
-  return test(value, caret, idx + 1, res);
-  // return <div></div>
-  // if (!value) return [<span style={colors.cursor} className="blink">|</span>];
-  // // if (idx + 1 === value.length) {
-  // //   if (caret === idx + 1) res.push(<span style={colors.cursor} className="blink">|</span>);
-  // //   res.push(<span style={colors.cursor} className="blink">|</span>)
-  // //   return res;
-  // // }
-  // if (caret === idx) {
-  //   res.push(<span style={colors.cursor} className="blink">|</span>);
-  //   return test(value, caret, idx + 1, res);
-  // }
-  //
-  // res.push(<span>{value[idx]}</span>)
-  // return test(value, caret, idx + 1, res);
-}
-
-const formatOverlay = (value, caret) => {
-  if (!value) return <span className="blink">|</span>
-  return value.split('').map((v, idx) => {
-    const hasCaret = caret === idx ? <span style={colors.cursor} className="blink">|</span> : '';
-    const lastCaret = caret === idx + 1 ? <span style={colors.cursor} className="blink">|</span> : '';
-    if (v === '\n') return <span key={idx}>{hasCaret}<br/>{lastCaret}</span>;
-    if (v === ' ') return <span key={idx}>{hasCaret}&nbsp;{lastCaret}</span>;
-    if (v === '{' || v === '}') return <span>{hasCaret}<span key={idx} style={colors.blue}>{v}</span>{lastCaret}</span>;
-
-    return <span key={idx}>{hasCaret}{v}{lastCaret}</span>;
-  })
-}
 
 const formatValue = (value) => value.split('\n').map(v => <span>{v}<br/></span>)
 
