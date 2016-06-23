@@ -6,6 +6,8 @@ Use Mongo Monkey as your mongo client (mongo 3+ compatible)! Run multiple mongo 
 
 Mongo monkey uses the native mongodb driver, so write your queries just as you would in the console.
 
+Search input now formats json
+
 **To Install**
 ```
 npm install -g mongo-monkey
@@ -24,6 +26,7 @@ p={port} || port={port}
 **Usage**
 
 Separate multiple queries using a semi-colon.
+Run query with shortcut [ctrl + enter].
 
 ![Run multiple mongo queries at once](http://mbahoshy.github.io/imgs/mongo-monkey-sc1.png "Multiple Queries")
 
