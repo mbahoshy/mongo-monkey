@@ -159,7 +159,7 @@ class JsonInput extends Component {
             ref="search"
             className={className}
             type="text"
-            onChange={onChange}
+            onChange={e => onChange(e.target.value)}
             value={value}
             aria-describedby="qyinput"
             style={{
