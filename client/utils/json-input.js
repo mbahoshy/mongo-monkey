@@ -148,7 +148,6 @@ class JsonInput extends Component {
     const { caret } = this.state;
     const { offsetHeight, scrollTop } = this.refs.search ? this.refs.search : { offsetHeight: 0, scrollTop: 0 };
 
-    console.dir(this.refs.search)
     return (
       <div style={{ position: 'relative' }}>
         <div style={{ overflow: 'hidden', position: 'relative' }}>
