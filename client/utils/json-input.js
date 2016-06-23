@@ -14,19 +14,19 @@ import {
   shiftCodesDic,
 } from 'utils/search-utils';
 
-const TextOverlay = ({ value, scrollTop, caret }) => {
+const TextOverlay = ({ value, scrollTop, caret, className }) => {
   const style = {
     position: 'absolute',
-    top: `${8 - scrollTop}px`,
+    top: `${0 - scrollTop}px`,
     zIndex: '2',
-    left: '13px',
+    left: '0px',
     fontFamily: 'monospace',
-    fontSize: '14px',
-    lineHeight: '1.42857143',
+    border: 'none',
+    backgroundColor: 'transparent',
     pointerEvents: 'none',
   }
   return (
-    <div style={style}>
+    <div style={style} className={className}>
       {formatter(value, caret)}
     </div>
   )
@@ -160,7 +160,7 @@ class JsonInput extends Component {
             ref="search"
             className={className}
             type="text"
-            onChange={e => onChange(e.target.value)}
+            onChange={onChange}
             value={value}
             aria-describedby="qyinput"
             style={{
@@ -169,7 +169,7 @@ class JsonInput extends Component {
             }}
           >
           </textarea>
-          <TextOverlay value={value} scrollTop={scrollTop} caret={caret} />
+          <TextOverlay value={value} scrollTop={scrollTop} caret={caret} className={className} />
         </div>
       </div>
     )

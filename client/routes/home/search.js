@@ -74,7 +74,8 @@ class Search extends Component {
     const { search } = jsonInput.refs || {}
     const { offsetHeight, scrollTop } = search ? search : { offsetHeight: 0, scrollTop: 0 };
 
-    const handleSearchChange = (value) => {
+    const handleSearchChange = (e) => {
+      const { value } = e.target;
       // if (showSuggestion === false) this.setState({ showSuggestion: true });
       handleOnChange(value);
     }
