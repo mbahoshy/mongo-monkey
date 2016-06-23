@@ -144,20 +144,21 @@ class JsonInput extends Component {
   }
   render() {
     const { handleSetCaret, handleOnBlur, handleOnFocus } = this;
-    const { value, onChange } = this.props;
+    const { value, onChange, className } = this.props;
     const { caret } = this.state;
     const { offsetHeight, scrollTop } = this.refs.search ? this.refs.search : { offsetHeight: 0, scrollTop: 0 };
 
+    console.dir(this.refs.search)
     return (
       <div style={{ position: 'relative' }}>
-        <div style={{ overflow: 'hidden' }}>
+        <div style={{ overflow: 'hidden', position: 'relative' }}>
           <textarea
             onFocus={handleOnFocus}
             onBlur={handleOnBlur}
             onScroll={handleSetCaret}
             onClick={handleSetCaret}
             ref="search"
-            className="form-control"
+            className={className}
             type="text"
             onChange={e => onChange(e.target.value)}
             value={value}
@@ -168,7 +169,7 @@ class JsonInput extends Component {
             }}
           >
           </textarea>
-            <TextOverlay value={value} scrollTop={scrollTop} caret={caret} />
+          <TextOverlay value={value} scrollTop={scrollTop} caret={caret} />
         </div>
       </div>
     )
