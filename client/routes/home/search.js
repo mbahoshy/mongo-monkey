@@ -74,16 +74,18 @@ class Search extends Component {
     const { search } = jsonInput.refs || {}
     const { offsetHeight, scrollTop } = search ? search : { offsetHeight: 0, scrollTop: 0 };
 
-    const handleSearchChange = (e) => {
-      const { value } = e.target;
+    const handleSearchChange = (value) => {
       // if (showSuggestion === false) this.setState({ showSuggestion: true });
       handleOnChange(value);
     }
 
     return (
       <div style={{ position: 'relative' }}>
-        <JsonInput onChange={handleSearchChange} value={value} onKeyDown={handleKeyDown} ref="jsonInput" className="form-control"/>
-        {suggestions.length > 0 && focus && getSuggestionHtml(suggestions, value, activeSuggestion, caret, chooseSuggestion, scrollTop)}
+        <div className="input-group">
+          <JsonInput onChange={handleSearchChange} value={value} onKeyDown={handleKeyDown} ref="jsonInput" className="form-control"/>
+          {suggestions.length > 0 && focus && getSuggestionHtml(suggestions, value, activeSuggestion, caret, chooseSuggestion, scrollTop)}
+          <span className="input-group-addon" id="qyinput" onClick={handleSendQuery}>Send</span>
+        </div>
       </div>
 
     )
