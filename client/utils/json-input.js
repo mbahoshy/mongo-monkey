@@ -44,7 +44,7 @@ class JsonInput extends Component {
     this.state = { caret: 0, focus: false };
   }
   componentDidMount() {
-    window.addEventListener('keydown', this.handleKeyDown)
+    this.refs.search.addEventListener('keydown', this.handleKeyDown)
   }
   componentDidUpdate() {
     const caret = getCaret(this.refs.search);
@@ -69,7 +69,14 @@ class JsonInput extends Component {
     const caret = getCaret(this.refs.search);
     this.setState({ caret });
 
-    this.props.onKeyDown ? this.props.onKeyDown(e) : () => {};
+    if (this.props.onKeyDown) {
+      const breakEx = this.props.onKeyDown(e);
+      if (breakEx) {
+        return;
+      }
+    }
+
+    console.dir('hit');
 
     // arrow keys
     if (keyCode === 37 || keyCode === 39 || keyCode === 40 || keyCode === 38) {

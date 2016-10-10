@@ -72,9 +72,10 @@
 	display: block !important;
 }
 .reveal {
-  border-radius: 10px;
+  overflow-y: scroll;
+  border-radius: 3px;
   padding: 20px;
-  border: 8px solid #6B6B6B;
+  border: 6px solid rgba(43, 43, 43, 0.85);
 	position: relative;
   z-index: 101;
   background-color: white;
@@ -122,7 +123,45 @@
   padding-bottom: 15px;
   border-bottom: 1px solid #CCC;
   margin-bottom: 20px;
-  background-color: rgba(204, 204, 204, 0.15);
+  background-color: #3a3a3a;
+  // background-color: rgb(105, 105, 105);
+  h2 {
+    color: whitesmoke;
+  }
+}
+
+.db-style {
+  // padding: 10px 0;
+  border-right: 1px solid rgba(204, 204, 204, 0.43);
+  color: #696969;
+  // padding-left: 5px;
+  &:hover {
+    border-right: 5px solid rgba(204, 204, 204, 0.43);
+    padding-left: 5px;
+    .db-connect {
+      display: block;
+    }
+  }
+}
+
+.dbactive {
+  // padding: 10px 0;
+  border-right: 5px solid rgba(14, 148, 14, 0.53);
+  color: #696969;
+  // padding-left: 5px;
+  // background-color: rgba(234, 234, 234, 0.5);
+  .db-connect {
+    color: green;
+    display: block;
+  }
+  &:hover {
+    border-right: 5px solid rgba(14, 148, 14, 0.2);
+  }
+}
+
+.db-connect {
+  padding: 12px;
+  display: none;
 }
 
 .collection {

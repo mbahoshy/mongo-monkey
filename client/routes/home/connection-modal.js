@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Modal from 'components/modal';
 import SimpleForm from 'routes/home/connection-form';
 
+const grey = '#696969';
+
 class ConnectionModal extends Component {
   constructor (props) {
     super(props);
@@ -46,6 +48,7 @@ class ConnectionModal extends Component {
       <div>
 
         <Modal id="test" isOpen={modalOpen} close={onModalClose}>
+          <div style={{ color: grey, fontSize: '20px', marginBottom: '10px' }}>Manage Connections</div>
           <div className="row connection-header">
             <div className="col-lg-3"><label>Name</label></div>
             <div className="col-lg-6"><label>Host</label></div>

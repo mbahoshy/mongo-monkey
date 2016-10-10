@@ -14,6 +14,21 @@ export const SET_ACTIVE_DB = "SET_ACTIVE_DB";
 export const SET_CONNECTIONS = "SET_CONNECTIONS";
 export const GET_CONNECTIONS = "GET_CONNECTIONS";
 
+export const SET_RECENT_QUERIES = "SET_RECENT_QUERIES";
+export const TOGGLE_RECENT_QUERIES = "TOGGLE_RECENT_QUERIES";
+
+const saveRecentQuery = ({ host, activeDb, query }) => {
+  const recentQueries = JSON.parse(localStorage.getItem('recentQueries')) || [];
+  recentQueries.unshift({
+    host,
+    activeDb,
+    query,
+    timestamp: new Date().getTime(),
+  });
+  localStorage.setItem('recentQueries', JSON.stringify(recentQueries));
+  return recentQueries;
+}
+
 export function sendQuery (host, activeDb, query) {
 	return (dispatch) => {
 		dispatch({type: POST_QUERY_SUBMIT});
@@ -21,7 +36,9 @@ export function sendQuery (host, activeDb, query) {
       if (err) {
         return dispatch({type: POST_QUERY_FAIL, err});
       }
-			return dispatch({type: POST_QUERY_SUCCESS, payload: result});
+      const recentQueries = saveRecentQuery({ host, activeDb, query });
+      dispatch({type: SET_RECENT_QUERIES, payload: recentQueries });
+			return dispatch({type: POST_QUERY_SUCCESS, payload: result });
 		})
 	}
 }
@@ -40,8 +57,17 @@ export function setConnections (connections) {
 }
 
 export function getConnections () {
-  const connections = localStorage.getItem('connections', JSON.stringify(connections));
+  const connections = localStorage.getItem('connections');
   return { type: GET_CONNECTIONS, payload: JSON.parse(connections) };
+}
+
+export function getRecentQueries () {
+  const recentQueries = localStorage.getItem('recentQueries') || [];
+  return { type: SET_RECENT_QUERIES, payload: JSON.parse(recentQueries) };
+}
+
+export function toggleRecentQueries () {
+  return { type: TOGGLE_RECENT_QUERIES };
 }
 
 export function getDatabases (host) {
@@ -51,7 +77,7 @@ export function getDatabases (host) {
       if (err) {
         return dispatch({type: POST_HOST_FAIL, err});
       }
-			return dispatch({type: POST_HOST_SUCCESS, payload: result});
+			return dispatch({type: POST_HOST_SUCCESS, payload: { host, databases: result }});
 		})
 	}
 }

@@ -12,6 +12,15 @@ function results (state=[], action) {
   }
 }
 
+function recentQueries (state=[], action) {
+  switch (action.type) {
+    case "SET_RECENT_QUERIES":
+      return action.payload;
+    default:
+      return state;
+  }
+}
+
 function activeTab (state=0, action) {
   switch (action.type) {
     case "SET_ACTIVE_TAB":
@@ -26,7 +35,16 @@ function activeTab (state=0, action) {
 function databases (state=null, action) {
   switch (action.type) {
     case "POST_HOST_SUCCESS":
-      return action.payload;
+      return action.payload.databases;
+    default:
+      return state;
+  }
+}
+
+function activeHost (state=null, action) {
+  switch (action.type) {
+    case "POST_HOST_SUCCESS":
+      return action.payload.host;
     default:
       return state;
   }
@@ -60,4 +78,13 @@ function resultKey (state = null, action) {
   }
 }
 
-export default combineReducers({results, activeTab, databases, activeDb, connections, resultKey})
+function showRecentQueries(state = false, action) {
+  switch (action.type) {
+    case 'TOGGLE_RECENT_QUERIES':
+      return !state;
+    default:
+      return state;
+  }
+}
+
+export default combineReducers({results, activeTab, databases, activeDb, activeHost, connections, resultKey, recentQueries, showRecentQueries})

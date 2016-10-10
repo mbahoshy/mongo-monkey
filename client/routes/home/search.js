@@ -55,7 +55,8 @@ class Search extends Component {
       if (keyCode === 13 || keyCode === 9) {
         chooseSuggestion(suggestions[activeSuggestion].next, suggestions[activeSuggestion].caretOffset);
         this.setState({ suggestions: [], activeSuggestion: 0 });
-        return;
+        e.preventDefault();
+        return true;
       }
     }
     this.forceUpdate();
