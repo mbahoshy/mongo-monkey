@@ -28,6 +28,6 @@ p={port} || port={port}
 Separate multiple queries using a semi-colon.
 Run query with shortcut [ctrl + enter].
 
-![Run multiple mongo queries at once](http://mbahoshy.github.io/imgs/mongo-monkey-sc1.png "Multiple Queries")
+![Run multiple mongo queries at once](http://mbahoshy.github.io/imgs/mongo-monkey-sc3.png "Multiple Queries")
 
-![Browse and download gridfs files](http://mbahoshy.github.io/imgs/mongo-monkey-sc2.png "Browse Files")
+![Browse and download gridfs files](http://mbahoshy.github.io/imgs/mongo-monkey-sc4.png "Browse Files")
