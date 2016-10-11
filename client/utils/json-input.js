@@ -159,6 +159,10 @@ class JsonInput extends Component {
       <div style={{ position: 'relative' }}>
         <div style={{ overflow: 'hidden', position: 'relative' }}>
           <textarea
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck="false"
             onFocus={handleOnFocus}
             onBlur={handleOnBlur}
             onScroll={handleSetCaret}

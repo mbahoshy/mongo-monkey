@@ -43,9 +43,6 @@ class Home extends Component {
       activeHost,
       connections } = this.props;
 
-    console.log('orange')
-    console.dir(connections)
-
     const handleOnChange = (value) => this.setState({ value });
 
     const handleSendQuery = () => {
@@ -136,8 +133,6 @@ class Home extends Component {
 
 
 const mapState = state => {
-  console.log('state')
-  console.dir(state)
   return {
   results: state.appStore.results,
   activeTab: state.appStore.activeTab,

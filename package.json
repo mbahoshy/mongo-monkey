@@ -1,6 +1,6 @@
 {
   "name": "mongo-monkey",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "repository": "git://github.com/mbahoshy/mongo-monkey.git",
@@ -26,7 +26,7 @@
     "gridfs file browser"
   ],
   "author": "",
-  "license": "ISC",
+  "license": "UNLICENSED",
   "dependencies": {
     "babel-runtime": "^6.6.1",
     "bluebird": "^3.3.4",

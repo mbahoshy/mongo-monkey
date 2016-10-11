@@ -6,8 +6,8 @@ const selectStyle = {
   width: '100%',
   backgroundColor: 'transparent',
   borderBottom: '1px solid #CCC',
-  '-webkit-appearance': 'none',
-  '-moz-appearance': 'none',
+  WebkitAppearance: 'none',
+  MozAppearance: 'none',
   borderRadius: '0',
   boxShadow: 'none',
   height: '40px',
@@ -27,8 +27,6 @@ const SelectHost = props => {
     connections,
     handleConnectDatabase,
   } = props;
-  console.log('banana')
-  console.dir(connections)
   return (
     <div style={{ position: 'relative', height: '40px' }}>
       <select onChange={handleHostChange} style={selectStyle} >

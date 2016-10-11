@@ -58,12 +58,12 @@ export function setConnections (connections) {
 
 export function getConnections () {
   const connections = localStorage.getItem('connections');
-  return { type: GET_CONNECTIONS, payload: JSON.parse(connections) };
+  return { type: GET_CONNECTIONS, payload: JSON.parse(connections) || [] };
 }
 
 export function getRecentQueries () {
-  const recentQueries = localStorage.getItem('recentQueries') || [];
-  return { type: SET_RECENT_QUERIES, payload: JSON.parse(recentQueries) };
+  const recentQueries = localStorage.getItem('recentQueries');
+  return { type: SET_RECENT_QUERIES, payload: JSON.parse(recentQueries) || [] };
 }
 
 export function toggleRecentQueries () {

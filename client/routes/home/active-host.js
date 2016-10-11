@@ -3,8 +3,6 @@ import React from 'react';
 const ActiveHost = props => {
   const { activeHost, activeDb } = props;
 
-  console.dir(activeDb)
-
   if (!activeHost) return <div></div>;
 
   const { name, port, url } = activeHost;
