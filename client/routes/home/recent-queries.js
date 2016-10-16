@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import Modal from 'components/modal';
-import JsonInput from 'utils/json-input';
+import JsonInput, { JsonOverlay } from 'utils/json-input';
 
 const style = {
   padding: '10px',
   borderBottom: '1px solid #e6e6e6',
   fontFamily: 'monospace',
   color: grey,
+  float: 'left',
+  width: '100%',
 };
 
 const grey = '#696969';
@@ -22,7 +24,7 @@ const RecentQueries = ({ searchResults, handleOnChange, onToggleRecentQueries, s
           <div style={{ color: grey, fontSize: '20px', marginBottom: '10px' }}>Recent Queries</div>
           <JsonInput onChange={onSearchChange} value={search} className="form-control"/>
           <div>
-            {showRecentQueries && searchResults && searchResults.map(v => (
+            {showRecentQueries && searchResults && searchResults.map((v, idx) => (
               <div
                 style={style}
                 onClick={() => {
@@ -30,7 +32,7 @@ const RecentQueries = ({ searchResults, handleOnChange, onToggleRecentQueries, s
                   onToggleRecentQueries();
                 }}
               >
-                {v.query}
+                <JsonOverlay key={idx} value={v.query} />
               </div>
             ))}
           </div>

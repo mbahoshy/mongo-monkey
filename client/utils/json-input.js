@@ -76,8 +76,6 @@ class JsonInput extends Component {
       }
     }
 
-    console.dir('hit');
-
     // arrow keys
     if (keyCode === 37 || keyCode === 39 || keyCode === 40 || keyCode === 38) {
       setTimeout(this.forceUpdate.bind(this), 50)
@@ -185,5 +183,20 @@ class JsonInput extends Component {
     )
   }
 }
+
+export const JsonOverlay = ({ value, className }) => {
+  const style = {
+    zIndex: '2',
+    fontFamily: 'monospace',
+    border: 'none',
+    backgroundColor: 'transparent',
+    pointerEvents: 'none',
+  }
+  return (
+    <div style={style} className={className}>
+      {formatter(value)}
+    </div>
+  )
+};
 
 export default JsonInput;

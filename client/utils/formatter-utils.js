@@ -14,7 +14,14 @@ const Caret = () => (
 )
 
 const showCaret = (caret, idx) => {
+  if (!caret) return false;
   return caret === idx ? <Caret /> : false;
+}
+
+const formatSpecial = value => {
+  if (value === ' ') return <span>&nbsp;</span>;
+  if (value === '\n') return <br />;
+  return value;
 }
 
 const getHtml = (value, idx, caret) => {
@@ -88,7 +95,7 @@ const getHtml = (value, idx, caret) => {
     let newIdx = idx + 1;
     while (newIdx < value.length) {
       const newHasCaret = showCaret(caret, newIdx);
-      chars.push(<span key={newIdx}>{newHasCaret}<span style={colors.green}>{value[newIdx]}</span></span>);
+      chars.push(<span key={newIdx}>{newHasCaret}<span style={colors.green}>{formatSpecial(value[newIdx])}</span></span>);
       if (value[newIdx] === '\'') {
         newIdx++;
         break;
@@ -106,7 +113,7 @@ const getHtml = (value, idx, caret) => {
     let newIdx = idx + 1;
     while (newIdx < value.length) {
       const newHasCaret = showCaret(caret, newIdx);
-      chars.push(<span key={newIdx}>{newHasCaret}<span style={colors.green}>{value[newIdx]}</span></span>);
+      chars.push(<span key={newIdx}>{newHasCaret}<span style={colors.green}>{formatSpecial(value[newIdx])}</span></span>);
       if (value[newIdx] === '"') {
         newIdx++;
         break;
