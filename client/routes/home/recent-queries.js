@@ -52,7 +52,7 @@ class RecentQueriesComponent extends Component {
     const onSearchChange = value => {
       this.setState({ search: value });
     }
-    const formatCompare = c => c.toLowerCase().replace(/ /g,'');
+    const formatCompare = c => c.toLowerCase().replace(/ /g,'').replace(/\n/g,'');
     const compare = formatCompare(state.search);
     const searchResults = props.recentQueries.filter(v => {
       if (!compare) return true;

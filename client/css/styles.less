@@ -73,24 +73,36 @@
 }
 .reveal {
   overflow-y: scroll;
+  width: 40%;
+  min-width: 600px;
+  right: 0;
+  top: 79;
+  bottom: 0;
   border-radius: 3px;
-  padding: 20px;
-  border: 6px solid rgba(43, 43, 43, 0.85);
-	position: relative;
+  padding: 15px 30px;
+  // border: 6px solid rgba(43, 43, 43, 0.85);
+	position: fixed;
   z-index: 101;
   background-color: white;
-  margin-left: 20%;
-  margin-right: 20%;
-  margin-top: 8%;
-  height: 500px;
+  @media (max-width: 600px) {
+    width: 100%;
+    min-width: 0;
+  }
+  // margin-left: 20%;
+  // margin-right: 20%;
+  // margin-top: 8%;
+  // height: 500px;
 	.close-button {
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 0;
+    left: 0;
     padding: 5px;
-    border-radius: 5px;
-    background-color: red;
-    color: white
+    border-radius: 2px;
+    background-color: #fbfbfb;
+    color: red;
+    &:hover {
+      background-color: #ccc;
+    }
 	}
   .has-error .error {
     z-index: 10;

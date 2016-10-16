@@ -92,7 +92,7 @@ class Home extends Component {
         </div>
 
         <ConnectionModal {... { modalOpen, onModalClose, connections, handleSubmit }} />
-        <div className="col-lg-3">
+        <div className="col-lg-3 col-md-4 col-sm-5">
           <SelectHost {... {
               handleHostChange,
               connections,
@@ -111,7 +111,7 @@ class Home extends Component {
             </div>
           )}
         </div>
-        <div className="col-lg-9">
+        <div className="col-lg-9 col-md-8 col-sm-7">
           <Search {... { handleOnChange, value, handleSendQuery, currentDb }} />
           <RecentQueries {...{ recentQueries, handleOnChange, onToggleRecentQueries, showRecentQueries }} />
 

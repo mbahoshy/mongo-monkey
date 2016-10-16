@@ -50,9 +50,9 @@ class ConnectionModal extends Component {
         <Modal id="test" isOpen={modalOpen} close={onModalClose}>
           <div style={{ color: grey, fontSize: '20px', marginBottom: '10px' }}>Manage Connections</div>
           <div className="row connection-header">
-            <div className="col-lg-3"><label>Name</label></div>
-            <div className="col-lg-6"><label>Host</label></div>
-            <div className="col-lg-3"><label>Port</label></div>
+            <div className="col-xs-3"><label>Name</label></div>
+            <div className="col-xs-6"><label>Host</label></div>
+            <div className="col-xs-3"><label>Port</label></div>
           </div>
           {connections.map((v, index) => {
             const handleSetEdit = () => onSetEdit(index);
@@ -82,9 +82,9 @@ class ConnectionModal extends Component {
             }
             return (
               <div className="row connection-row connection-hover">
-                <div className="col-lg-3">{v.name}</div>
-                <div className="col-lg-6">{v.url}</div>
-                <div className="col-lg-3">{v.port}
+                <div className="col-xs-3">{v.name}</div>
+                <div className="col-xs-6">{v.url}</div>
+                <div className="col-xs-3">{v.port}
                   <div className="pull-right">
                     <span className="fa fa-pencil connection-button" onClick={handleSetEdit}></span>
                     <span className="fa fa-trash connection-button" onClick={handleDeleteConnection}></span>
