@@ -14,16 +14,17 @@ import {
   shiftCodesDic,
 } from 'utils/search-utils';
 
-const TextOverlay = ({ value, scrollTop, caret, className }) => {
+const TextOverlay = ({ value, scrollTop, scrollLeft, offsetWidth, caret, className }) => {
   const style = {
     position: 'absolute',
     top: `${0 - scrollTop}px`,
     zIndex: '2',
-    left: '0px',
+    left: `${0 - scrollLeft}px`,
     fontFamily: 'monospace',
     border: 'none',
     backgroundColor: 'transparent',
     pointerEvents: 'none',
+    width: offsetWidth,
   }
   return (
     <div style={style} className={className}>
@@ -151,7 +152,7 @@ class JsonInput extends Component {
     const { handleSetCaret, handleOnBlur, handleOnFocus } = this;
     const { value, onChange, className } = this.props;
     const { caret } = this.state;
-    const { offsetHeight, scrollTop } = this.refs.search ? this.refs.search : { offsetHeight: 0, scrollTop: 0 };
+    const { offsetHeight, offsetWidth, scrollTop, scrollLeft } = this.refs.search ? this.refs.search : { offsetHeight: 0, offsetWidth:0, scrollTop: 0, scrollLeft: 0 };
 
     return (
       <div style={{ position: 'relative' }}>
@@ -168,16 +169,18 @@ class JsonInput extends Component {
             ref="search"
             className={className}
             type="text"
+            wrap="off"
             onChange={e => onChange(e.target.value)}
             value={value}
             aria-describedby="qyinput"
             style={{
               fontFamily: "monospace",
               color: 'transparent',
+              whiteSpace: 'nowrap',
             }}
           >
           </textarea>
-          <TextOverlay value={value} scrollTop={scrollTop} caret={caret} className={className} />
+          <TextOverlay value={value} scrollTop={scrollTop} scrollLeft={scrollLeft} offsetWidth={offsetWidth} caret={caret} className={className} />
         </div>
       </div>
     )
