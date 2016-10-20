@@ -29,7 +29,7 @@ const Result = ({ data, view, host, activeDb, value}) => {
 
 const componentUpdateKeys = (props, nextProps, ...args) => {
   for (var i = 0; i < args.length; i++) {
-    if(props[args[i]] !== nextProps[args[1]]) return true;
+    if(props[args[i]] !== nextProps[args[i]]) return true;
   }
   return false;
 }
