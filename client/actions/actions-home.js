@@ -17,15 +17,23 @@ export const GET_CONNECTIONS = "GET_CONNECTIONS";
 export const SET_RECENT_QUERIES = "SET_RECENT_QUERIES";
 export const TOGGLE_RECENT_QUERIES = "TOGGLE_RECENT_QUERIES";
 
+const QUERY_LIMIT = 20;
+
+const getQueries = () => {
+  const storedQueries = localStorage.getItem('recentQueries');
+  const recentQueries = JSON.parse(storedQueries) || [];
+  return recentQueries.slice(0, QUERY_LIMIT)
+}
+
 const saveRecentQuery = ({ host, activeDb, query }) => {
-  const recentQueries = JSON.parse(localStorage.getItem('recentQueries')) || [];
+  const recentQueries = getQueries();
   recentQueries.unshift({
     host,
     activeDb,
     query,
     timestamp: new Date().getTime(),
   });
-  localStorage.setItem('recentQueries', JSON.stringify(recentQueries));
+  localStorage.setItem('recentQueries', JSON.stringify(recentQueries.slice(0, QUERY_LIMIT)));
   return recentQueries;
 }
 
@@ -62,8 +70,8 @@ export function getConnections () {
 }
 
 export function getRecentQueries () {
-  const recentQueries = localStorage.getItem('recentQueries');
-  return { type: SET_RECENT_QUERIES, payload: JSON.parse(recentQueries) || [] };
+  const recentQueries = getQueries();
+  return { type: SET_RECENT_QUERIES, payload: recentQueries };
 }
 
 export function toggleRecentQueries () {
