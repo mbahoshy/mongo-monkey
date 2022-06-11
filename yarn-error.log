@@ -1,0 +1,105 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js
+
+PATH: 
+  C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files\Docker\Docker\Resources\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Users\mbaho\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files (x86)\Yarn\bin\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\Airtame;C:\Users\mbaho\AppData\Local\Programs\Python\Python36\Scripts\;C:\Users\mbaho\AppData\Local\Programs\Python\Python36\;C:\Users\mbaho\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Microsoft VS Code\bin;C:\Users\mbaho\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Users\mbaho\AppData\Local\Yarn\bin;C:\Users\mbaho\AppData\Local\GitHubDesktop\bin;C:\Users\mbaho\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Java\jdk-11.0.2\bin;C:\Applications\Atlassian\atlassian-plugin-sdk-8.0.4\bin;C:\Users\mbaho\AppData\Roaming\Dashlane\6.1909.0.18330\bin\Firefox_Extension\{442718d9-475e-452a-b3e1-fb1ee16b8e9f}\components;C:\Users\mbaho\AppData\Roaming\Dashlane\6.1909.0.18330\ucrt;C:\Users\mbaho\AppData\Roaming\Dashlane\6.1909.0.18330\bin\Qt;C:\Users\mbaho\AppData\Roaming\Dashlane\6.1909.0.18330\bin\Ssl;C:\Program Files\MongoDB\Server\4.0\bin\;
+
+Yarn version: 
+  1.6.0
+
+Node version: 
+  7.9.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  SyntaxError: C:\Users\mbaho\mattcode\mongo-monkey\package.json: Unexpected token } in JSON at position 1081
+      at JSON.parse (<anonymous>)
+      at C:\Program Files (x86)\Yarn\lib\cli.js:1130:59
+      at Generator.next (<anonymous>)
+      at step (C:\Program Files (x86)\Yarn\lib\cli.js:98:30)
+      at C:\Program Files (x86)\Yarn\lib\cli.js:109:13
+
+npm manifest: 
+  {
+    "name": "mongo-monkey",
+    "version": "2.0.4",
+    "description": "",
+    "main": "index.js",
+    "repository": "git://github.com/mbahoshy/mongo-monkey.git",
+    "scripts": {
+      "clean": "rm -rf build && mkdir build",
+      "build-server": "babel -d ./build ./server -s --ignore public",
+      "build": "npm run clean && npm run build-server && ENVIRONMENT=build webpack -p",
+      "start": "node build/bin/index.js",
+      "dev": "babel-node server/bin/index.js",
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "bin": {
+      "mongo-monkey": "./build/bin/index.js"
+    },
+    "keywords": [
+      "mongodb",
+      "client",
+      "macos mongodb",
+      "windows mongodb",
+      "mongo",
+      "multiple queries",
+      "gridfs",
+      "gridfs file browser"
+    ],
+    "author": "",
+    "license": "UNLICENSED",
+    "dependencies": {
+      "babel-runtime": "^6.6.1",
+      "bluebird": "^3.3.4",
+      "gridfs-stream": "^1.1.1",
+      "koa": "^1.2.0",
+      "koa-bodyparser": "^2.0.1",
+      "koa-ejs": "^3.0.0",
+      "koa-json": "^1.1.1",
+      "koa-router": "^5.4.0",
+      "koa-static": "^2.0.0",
+      "mime": "^1.3.4",
+    },
+    "devDependencies": {
+      "babel": "^6.5.2",
+      "babel-cli": "^6.6.5",
+      "babel-core": "^6.7.4",
+      "babel-loader": "^6.2.4",
+      "babel-plugin-transform-async-to-generator": "^6.7.4",
+      "babel-plugin-transform-es2015-modules-commonjs": "^6.7.4",
+      "babel-plugin-transform-react-constant-elements": "^6.5.0",
+      "babel-plugin-transform-runtime": "^6.6.0",
+      "babel-plugin-transform-strict-mode": "^6.6.5",
+      "babel-preset-es2015": "^6.6.0",
+      "babel-preset-react": "^6.5.0",
+      "css-loader": "^0.23.1",
+      "extract-text-webpack-plugin": "^1.0.1",
+      "file-loader": "^0.8.5",
+      "history": "^2.0.1",
+      "html-webpack-plugin": "^2.14.0",
+      "isomorphic-fetch": "^2.2.1",
+      "json-loader": "^0.5.4",
+      "less": "^2.6.1",
+      "less-loader": "^2.2.2",
+      "react": "^15.0.0",
+      "react-dom": "^15.0.1",
+      "react-redux": "^4.4.2",
+      "react-router": "^2.0.1",
+      "redux": "^3.3.1",
+      "redux-form": "^4.2.2",
+      "redux-logger": "^2.6.1",
+      "redux-thunk": "^2.0.1",
+      "style-loader": "^0.13.1",
+      "url-loader": "^0.5.7",
+      "webpack": "^1.12.14"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
